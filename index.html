@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Controle de Projetos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            min-height: 100vh;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pulse-alert {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-green-purple {
+            background: linear-gradient(135deg, #10b981 0%, #8b5cf6 100%);
+        }
+
+        .gradient-purple-green {
+            background: linear-gradient(135deg, #8b5cf6 0%, #10b981 100%);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #10b981 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hover-scale {
+            transition: transform 0.2s ease;
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #10b981 0%, #8b5cf6 100%);
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #6b7280;
+            transition: color 0.2s ease;
+        }
+
+        .star.active {
+            color: #fbbf24;
+        }
+
+        .star:hover {
+            color: #fbbf24;
+        }
+
+        .page-transition {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .page-transition.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+    </style>
+</head>
+<body class="text-white font-sans">
+
+
+    <!-- Notification -->
+    <div id="notification" class="notification glass-effect p-3 md:p-4 rounded-lg shadow-lg max-w-xs md:max-w-sm">
+        <div class="flex items-center space-x-2 md:space-x-3">
+            <div id="notificationIcon" class="text-lg md:text-2xl"></div>
+            <div class="min-w-0 flex-1">
+                <p id="notificationTitle" class="font-semibold text-sm md:text-base truncate"></p>
+                <p id="notificationMessage" class="text-xs md:text-sm text-gray-300 truncate"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projects Page -->
+    <div id="projectsPage" class="page-transition active">
+        <!-- Header -->
+        <header class="glass-effect p-4 md:p-6 mb-6 md:mb-8 fade-in sticky top-0 z-40">
+            <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+                <div class="flex items-center space-x-3 md:space-x-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 gradient-green-purple rounded-xl flex items-center justify-center">
+                        <span class="text-xl md:text-2xl font-bold">📊</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl md:text-3xl font-bold text-gradient">Sistema de Projetos</h1>
+                        <p class="text-gray-400 text-xs md:text-sm hidden sm:block">Gerencie seus projetos com eficiência</p>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <div class="text-center sm:text-right">
+                        <p class="text-xs md:text-sm text-gray-400">Bem-vindo!</p>
+                        <p class="font-semibold text-sm md:text-base" id="currentDate"></p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                        <button onclick="togglePage()" class="bg-purple-600 px-3 py-2 md:px-4 md:py-2 rounded-lg font-semibold hover:bg-purple-700 transition-all duration-300 text-xs md:text-sm">
+                            👥 <span class="hidden sm:inline">Ver </span>Clientes
+                        </button>
+                        <button onclick="showAddModal()" class="gradient-green-purple px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base">
+                            <span class="mr-1 md:mr-2">+</span> <span class="hidden sm:inline">Novo </span>Projeto
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Stats -->
+        <div class="container mx-auto px-4 md:px-6 mb-6 md:mb-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 slide-up">
+                <div class="glass-effect p-4 md:p-6 rounded-xl card-hover">
+                    <div class="flex flex-col md:flex-row items-center md:justify-between mb-3 md:mb-4">
+                        <div class="w-10 h-10 md:w-14 md:h-14 gradient-green-purple rounded-xl flex items-center justify-center mb-2 md:mb-0">
+                            <span class="text-lg md:text-2xl">📈</span>
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-xl md:text-3xl font-bold text-gradient" id="totalProjects">0</p>
+                            <p class="text-gray-300 text-xs md:text-sm">Total de Projetos</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar w-full"></div>
+                    <p class="text-xs text-gray-400 mt-2 text-center md:text-left">Todos os projetos cadastrados</p>
+                </div>
+
+                <div class="glass-effect p-4 md:p-6 rounded-xl card-hover">
+                    <div class="flex flex-col md:flex-row items-center md:justify-between mb-3 md:mb-4">
+                        <div class="w-10 h-10 md:w-14 md:h-14 bg-yellow-500 rounded-xl flex items-center justify-center mb-2 md:mb-0">
+                            <span class="text-lg md:text-2xl">⚡</span>
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-xl md:text-3xl font-bold text-yellow-400" id="inProgressProjects">0</p>
+                            <p class="text-gray-300 text-xs md:text-sm">Em Andamento</p>
+                        </div>
+                    </div>
+                    <div class="bg-yellow-500 h-1 rounded-full"></div>
+                    <p class="text-xs text-gray-400 mt-2 text-center md:text-left">Projetos ativos</p>
+                </div>
+
+                <div class="glass-effect p-4 md:p-6 rounded-xl card-hover">
+                    <div class="flex flex-col md:flex-row items-center md:justify-between mb-3 md:mb-4">
+                        <div class="w-10 h-10 md:w-14 md:h-14 bg-green-500 rounded-xl flex items-center justify-center mb-2 md:mb-0">
+                            <span class="text-lg md:text-2xl">✅</span>
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-xl md:text-3xl font-bold text-green-400" id="completedProjects">0</p>
+                            <p class="text-gray-300 text-xs md:text-sm">Concluídos</p>
+                        </div>
+                    </div>
+                    <div class="bg-green-500 h-1 rounded-full"></div>
+                    <p class="text-xs text-gray-400 mt-2 text-center md:text-left">Projetos finalizados</p>
+                </div>
+
+                <div class="glass-effect p-4 md:p-6 rounded-xl card-hover">
+                    <div class="flex flex-col md:flex-row items-center md:justify-between mb-3 md:mb-4">
+                        <div class="w-10 h-10 md:w-14 md:h-14 bg-red-500 rounded-xl flex items-center justify-center mb-2 md:mb-0">
+                            <span class="text-lg md:text-2xl">⚠️</span>
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-xl md:text-3xl font-bold text-red-400 pulse-alert" id="overdueProjects">0</p>
+                            <p class="text-gray-300 text-xs md:text-sm">Atrasados</p>
+                        </div>
+                    </div>
+                    <div class="bg-red-500 h-1 rounded-full"></div>
+                    <p class="text-xs text-gray-400 mt-2 text-center md:text-left">Requerem atenção</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="container mx-auto px-4 md:px-6 mb-6 md:mb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+                <!-- Line Chart -->
+                <div class="glass-effect p-3 md:p-6 rounded-xl fade-in">
+                    <h3 class="text-base md:text-xl font-bold text-gradient mb-3 md:mb-4">📈 Evolução dos Projetos</h3>
+                    <div class="h-48 sm:h-64 md:h-80">
+                        <canvas id="projectsLineChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Doughnut Chart -->
+                <div class="glass-effect p-3 md:p-6 rounded-xl fade-in">
+                    <h3 class="text-base md:text-xl font-bold text-gradient mb-3 md:mb-4">📊 Status dos Projetos</h3>
+                    <div class="h-48 sm:h-64 md:h-80">
+                        <canvas id="projectsStatusChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Bar Chart -->
+                <div class="glass-effect p-3 md:p-6 rounded-xl fade-in lg:col-span-2 xl:col-span-1">
+                    <h3 class="text-base md:text-xl font-bold text-gradient mb-3 md:mb-4">🔥 Projetos por Prioridade</h3>
+                    <div class="h-48 sm:h-64 md:h-80">
+                        <canvas id="projectsPriorityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Filters -->
+        <div class="container mx-auto px-4 md:px-6 mb-6 md:mb-8">
+            <div class="glass-effect p-4 md:p-6 rounded-xl fade-in">
+                <div class="flex flex-col space-y-4">
+                    <div>
+                        <h2 class="text-lg md:text-xl font-bold text-gradient mb-3">Filtros Rápidos</h2>
+                        <div class="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:gap-3">
+                            <button onclick="filterProjects('todos')" class="gradient-purple-green px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:opacity-90 transition-opacity" id="filterTodos">
+                                <span class="hidden sm:inline">📋 </span>Todos
+                            </button>
+                            <button onclick="filterProjects('andamento')" class="bg-yellow-600 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-yellow-700 transition-colors" id="filterAndamento">
+                                <span class="hidden sm:inline">⚡ </span>Andamento
+                            </button>
+                            <button onclick="filterProjects('concluido')" class="bg-green-600 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-green-700 transition-colors" id="filterConcluido">
+                                <span class="hidden sm:inline">✅ </span>Concluídos
+                            </button>
+                            <button onclick="filterProjects('atrasados')" class="bg-red-600 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-red-700 transition-colors" id="filterAtrasados">
+                                <span class="hidden sm:inline">⚠️ </span>Atrasados
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                        <input type="text" id="searchInput" placeholder="🔍 Buscar projetos..." class="flex-1 px-3 py-2 md:px-4 md:py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                        <select id="sortSelect" class="px-3 py-2 md:px-4 md:py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                            <option value="nome">📝 Por Nome</option>
+                            <option value="data">📅 Por Data</option>
+                            <option value="status">📊 Por Status</option>
+                            <option value="prioridade">🔥 Por Prioridade</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects List -->
+        <div class="container mx-auto px-4 md:px-6 pb-6 md:pb-8">
+            <div class="glass-effect rounded-xl p-4 md:p-6 fade-in">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 space-y-2 sm:space-y-0">
+                    <h2 class="text-lg md:text-2xl font-bold text-gradient">Lista de Projetos</h2>
+                    <div class="flex items-center space-x-2 text-xs md:text-sm text-gray-400">
+                        <span>Total:</span>
+                        <span id="filteredCount" class="font-semibold text-white">0</span>
+                        <span>projetos</span>
+                    </div>
+                </div>
+                
+                <div id="projectsList" class="space-y-4">
+                    <!-- Projects will be dynamically inserted here -->
+                </div>
+                
+                <div id="emptyState" class="text-center py-16 text-gray-400">
+                    <div class="text-8xl mb-6">📋</div>
+                    <h3 class="text-2xl font-bold mb-2 text-gradient">Nenhum projeto encontrado</h3>
+                    <p class="text-lg mb-6">Comece criando seu primeiro projeto e organize suas tarefas</p>
+                    <button onclick="showAddModal()" class="gradient-green-purple px-8 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                        🚀 Criar Primeiro Projeto
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Action Button -->
+        <button onclick="showAddModal()" class="floating-action gradient-green-purple w-12 h-12 md:w-16 md:h-16 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center text-xl md:text-2xl hover:scale-110">
+            +
+        </button>
+    </div>
+
+    <!-- Clients Page -->
+    <div id="clientsPage" class="page-transition">
+        <!-- Header -->
+        <header class="glass-effect p-4 md:p-6 mb-6 md:mb-8 fade-in sticky top-0 z-40">
+            <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+                <div class="flex items-center space-x-3 md:space-x-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 gradient-green-purple rounded-xl flex items-center justify-center">
+                        <span class="text-xl md:text-2xl font-bold">👥</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl md:text-3xl font-bold text-gradient">Gestão de Clientes</h1>
+                        <p class="text-gray-400 text-xs md:text-sm hidden sm:block">Gerencie seus clientes com eficiência</p>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <div class="text-center sm:text-right">
+                        <p class="text-xs md:text-sm text-gray-400">Bem-vindo!</p>
+                        <p class="font-semibold text-sm md:text-base" id="currentDateClients"></p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                        <button onclick="togglePage()" class="bg-blue-600 px-3 py-2 md:px-4 md:py-2 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 text-xs md:text-sm">
+                            📊 <span class="hidden sm:inline">Ver </span>Projetos
+                        </button>
+                        <button onclick="showAddClientModal()" class="gradient-green-purple px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base">
+                            <span class="mr-1 md:mr-2">+</span> <span class="hidden sm:inline">Novo </span>Cliente
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Client Stats -->
+        <div class="container mx-auto px-4 md:px-6 mb-6 md:mb-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 slide-up">
+                <div class="glass-effect p-4 md:p-6 rounded-xl card-hover">
+                    <div class="flex flex-col md:flex-row items-center md:justify-between mb-3 md:mb-4">
+                        <div class="w-10 h-10 md:w-14 md:h-14 gradient-green-purple rounded-xl flex items-center justify-center mb-2 md:mb-0">
+                            <span class="text-lg md:text-2xl">👥</span>
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-xl md:text-3xl font-bold text-gradient" id="totalClients">0</p>
+                            <p class="text-gray-300 text-xs md:text-sm">Total de Clientes</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar w-full"></div>
+                    <p class="text-xs text-gray-400 mt-2 text-center md:text-left">Todos os clientes cadastrados</p>
+                </div>
+
+                <div class="glass-effect p-4 md:p-6 rounded-xl card-hover">
+                    <div class="flex flex-col md:flex-row items-center md:justify-between mb-3 md:mb-4">
+                        <div class="w-10 h-10 md:w-14 md:h-14 bg-yellow-500 rounded-xl flex items-center justify-center mb-2 md:mb-0">
+                            <span class="text-lg md:text-2xl">⭐</span>
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-xl md:text-3xl font-bold text-yellow-400" id="averageRating">0.0</p>
+                            <p class="text-gray-300 text-xs md:text-sm">Avaliação Média</p>
+                        </div>
+                    </div>
+                    <div class="bg-yellow-500 h-1 rounded-full"></div>
+                    <p class="text-xs text-gray-400 mt-2 text-center md:text-left">Satisfação dos clientes</p>
+                </div>
+
+                <div class="glass-effect p-4 md:p-6 rounded-xl card-hover">
+                    <div class="flex flex-col md:flex-row items-center md:justify-between mb-3 md:mb-4">
+                        <div class="w-10 h-10 md:w-14 md:h-14 bg-green-500 rounded-xl flex items-center justify-center mb-2 md:mb-0">
+                            <span class="text-lg md:text-2xl">🌟</span>
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-xl md:text-3xl font-bold text-green-400" id="fiveStarClients">0</p>
+                            <p class="text-gray-300 text-xs md:text-sm">5 Estrelas</p>
+                        </div>
+                    </div>
+                    <div class="bg-green-500 h-1 rounded-full"></div>
+                    <p class="text-xs text-gray-400 mt-2 text-center md:text-left">Clientes premium</p>
+                </div>
+
+                <div class="glass-effect p-4 md:p-6 rounded-xl card-hover">
+                    <div class="flex flex-col md:flex-row items-center md:justify-between mb-3 md:mb-4">
+                        <div class="w-10 h-10 md:w-14 md:h-14 bg-blue-500 rounded-xl flex items-center justify-center mb-2 md:mb-0">
+                            <span class="text-lg md:text-2xl">📅</span>
+                        </div>
+                        <div class="text-center md:text-right">
+                            <p class="text-xl md:text-3xl font-bold text-blue-400" id="newClientsThisMonth">0</p>
+                            <p class="text-gray-300 text-xs md:text-sm">Novos Este Mês</p>
+                        </div>
+                    </div>
+                    <div class="bg-blue-500 h-1 rounded-full"></div>
+                    <p class="text-xs text-gray-400 mt-2 text-center md:text-left">Crescimento mensal</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Filters -->
+        <div class="container mx-auto px-4 md:px-6 mb-6 md:mb-8">
+            <div class="glass-effect p-4 md:p-6 rounded-xl fade-in">
+                <div class="flex flex-col space-y-4">
+                    <div>
+                        <h2 class="text-lg md:text-xl font-bold text-gradient mb-3">Filtros Rápidos</h2>
+                        <div class="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:gap-3">
+                            <button onclick="filterClients('todos')" class="gradient-purple-green px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:opacity-90 transition-opacity" id="filterClientsTodos">
+                                <span class="hidden sm:inline">👥 </span>Todos
+                            </button>
+                            <button onclick="filterClients('5estrelas')" class="bg-yellow-600 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-yellow-700 transition-colors" id="filterClients5estrelas">
+                                <span class="hidden sm:inline">🌟 </span>5 Estrelas
+                            </button>
+                            <button onclick="filterClients('4estrelas')" class="bg-green-600 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-green-700 transition-colors" id="filterClients4estrelas">
+                                <span class="hidden sm:inline">⭐ </span>4+ Estrelas
+                            </button>
+                            <button onclick="filterClients('novos')" class="bg-blue-600 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-blue-700 transition-colors" id="filterClientsNovos">
+                                <span class="hidden sm:inline">🆕 </span>Novos
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                        <input type="text" id="searchClientInput" placeholder="🔍 Buscar clientes..." class="flex-1 px-3 py-2 md:px-4 md:py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                        <select id="sortClientSelect" class="px-3 py-2 md:px-4 md:py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                            <option value="nome">📝 Por Nome</option>
+                            <option value="rating">⭐ Por Avaliação</option>
+                            <option value="data">📅 Por Data</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clients List -->
+        <div class="container mx-auto px-4 md:px-6 pb-6 md:pb-8">
+            <div class="glass-effect rounded-xl p-4 md:p-6 fade-in">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 space-y-2 sm:space-y-0">
+                    <h2 class="text-lg md:text-2xl font-bold text-gradient">Lista de Clientes</h2>
+                    <div class="flex items-center space-x-2 text-xs md:text-sm text-gray-400">
+                        <span>Total:</span>
+                        <span id="filteredClientCount" class="font-semibold text-white">0</span>
+                        <span>clientes</span>
+                    </div>
+                </div>
+                
+                <div id="clientsList" class="space-y-4">
+                    <!-- Clients will be dynamically inserted here -->
+                </div>
+                
+                <div id="emptyClientState" class="text-center py-16 text-gray-400">
+                    <div class="text-8xl mb-6">👥</div>
+                    <h3 class="text-2xl font-bold mb-2 text-gradient">Nenhum cliente encontrado</h3>
+                    <p class="text-lg mb-6">Comece cadastrando seu primeiro cliente</p>
+                    <button onclick="showAddClientModal()" class="gradient-green-purple px-8 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                        🚀 Cadastrar Primeiro Cliente
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Action Button for Clients -->
+        <button onclick="showAddClientModal()" class="floating-action gradient-green-purple w-12 h-12 md:w-16 md:h-16 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center text-xl md:text-2xl hover:scale-110">
+            +
+        </button>
+    </div>
+
+    <!-- Add/Edit Project Modal -->
+    <div id="projectModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-2 md:p-4">
+        <div class="glass-effect p-3 md:p-8 rounded-xl max-w-2xl w-full slide-up max-h-[95vh] md:max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-3 md:mb-6">
+                <div class="flex items-center space-x-2 md:space-x-3">
+                    <div class="w-8 h-8 md:w-10 md:h-10 gradient-green-purple rounded-lg flex items-center justify-center">
+                        <span class="text-lg md:text-xl">📝</span>
+                    </div>
+                    <h3 id="modalTitle" class="text-base md:text-2xl font-bold text-gradient">Novo Projeto</h3>
+                </div>
+                <button onclick="hideModal()" class="text-gray-400 hover:text-white text-2xl md:text-3xl transition-colors p-1">&times;</button>
+            </div>
+            
+            <form id="projectForm" class="space-y-4 md:space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                    <div class="lg:col-span-2">
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Nome do Projeto *</label>
+                        <input type="text" id="projectName" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm md:text-base" placeholder="Digite o nome do projeto" required>
+                    </div>
+                    
+                    <div class="lg:col-span-2">
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Descrição</label>
+                        <textarea id="projectDescription" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent h-24 md:h-32 resize-none text-sm md:text-base" placeholder="Descreva o projeto, objetivos e detalhes importantes..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Status</label>
+                        <select id="projectStatus" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                            <option value="planejamento">📋 Planejamento</option>
+                            <option value="andamento">⚡ Em Andamento</option>
+                            <option value="concluido">✅ Concluído</option>
+                            <option value="pausado">⏸️ Pausado</option>
+                            <option value="cancelado">❌ Cancelado</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Prioridade</label>
+                        <select id="projectPriority" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                            <option value="baixa">🟢 Baixa</option>
+                            <option value="media">🟡 Média</option>
+                            <option value="alta">🟠 Alta</option>
+                            <option value="critica">🔴 Crítica</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Data de Início</label>
+                        <input type="date" id="projectStartDate" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Data de Entrega</label>
+                        <input type="date" id="projectDeadline" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Cliente/Responsável</label>
+                        <input type="text" id="projectClient" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base" placeholder="Nome do cliente ou responsável">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Orçamento (R$)</label>
+                        <input type="number" id="projectBudget" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base" placeholder="0,00" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="flex gap-3 md:gap-4 pt-4 md:pt-6">
+                    <button type="submit" class="flex-1 gradient-green-purple py-3 md:py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity text-sm md:text-lg">
+                        💾 <span class="hidden sm:inline">Salvar </span>Projeto
+                    </button>
+                    <button type="button" onclick="hideModal()" class="flex-1 bg-gray-600 py-3 md:py-4 rounded-lg font-semibold hover:bg-gray-700 transition-colors text-sm md:text-lg">
+                        ❌ Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Client Modal -->
+    <div id="clientModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-2 md:p-4">
+        <div class="glass-effect p-3 md:p-8 rounded-xl max-w-2xl w-full slide-up max-h-[95vh] md:max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-3 md:mb-6">
+                <div class="flex items-center space-x-2 md:space-x-3">
+                    <div class="w-8 h-8 md:w-10 md:h-10 gradient-green-purple rounded-lg flex items-center justify-center">
+                        <span class="text-lg md:text-xl">👤</span>
+                    </div>
+                    <h3 id="clientModalTitle" class="text-base md:text-2xl font-bold text-gradient">Novo Cliente</h3>
+                </div>
+                <button onclick="hideClientModal()" class="text-gray-400 hover:text-white text-2xl md:text-3xl transition-colors p-1">&times;</button>
+            </div>
+            
+            <form id="clientForm" class="space-y-4 md:space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                    <div class="lg:col-span-2">
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Nome Completo *</label>
+                        <input type="text" id="clientName" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm md:text-base" placeholder="Digite o nome completo do cliente" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Telefone *</label>
+                        <input type="tel" id="clientPhone" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base" placeholder="(11) 99999-9999" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Email</label>
+                        <input type="email" id="clientEmail" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base" placeholder="cliente@email.com">
+                    </div>
+                    
+                    <div class="lg:col-span-2">
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Endereço Completo *</label>
+                        <textarea id="clientAddress" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent h-24 md:h-32 resize-none text-sm md:text-base" placeholder="Rua, número, bairro, cidade, CEP..." required></textarea>
+                    </div>
+                    
+                    <div class="lg:col-span-2">
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Avaliação do Cliente</label>
+                        <div class="flex items-center space-x-3">
+                            <div class="star-rating" id="clientRating">
+                                <span class="star" data-rating="1">⭐</span>
+                                <span class="star" data-rating="2">⭐</span>
+                                <span class="star" data-rating="3">⭐</span>
+                                <span class="star" data-rating="4">⭐</span>
+                                <span class="star" data-rating="5">⭐</span>
+                            </div>
+                            <span id="ratingText" class="text-gray-400 text-sm">Clique nas estrelas para avaliar</span>
+                        </div>
+                        <input type="hidden" id="clientRatingValue" value="0">
+                    </div>
+                    
+                    <div class="lg:col-span-2">
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Observações</label>
+                        <textarea id="clientNotes" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent h-20 md:h-24 resize-none text-sm md:text-base" placeholder="Informações adicionais sobre o cliente..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="flex gap-3 md:gap-4 pt-4 md:pt-6">
+                    <button type="submit" class="flex-1 gradient-green-purple py-3 md:py-4 rounded-lg font-semibold hover:opacity-90 transition-opacity text-sm md:text-lg">
+                        💾 <span class="hidden sm:inline">Salvar </span>Cliente
+                    </button>
+                    <button type="button" onclick="hideClientModal()" class="flex-1 bg-gray-600 py-3 md:py-4 rounded-lg font-semibold hover:bg-gray-700 transition-colors text-sm md:text-lg">
+                        ❌ Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
+        <div class="glass-effect p-4 md:p-8 rounded-xl max-w-md w-full slide-up">
+            <div class="text-center">
+                <div class="w-16 h-16 md:w-20 md:h-20 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                    <span class="text-2xl md:text-3xl">🗑️</span>
+                </div>
+                <h3 class="text-lg md:text-2xl font-bold mb-3 md:mb-4 text-red-400">Confirmar Exclusão</h3>
+                <p class="text-gray-300 mb-2 text-base md:text-lg" id="deleteMessage">Tem certeza que deseja excluir este item?</p>
+                <p class="text-gray-400 mb-4 md:mb-6 text-xs md:text-sm">Esta ação não pode ser desfeita e todos os dados serão perdidos permanentemente.</p>
+                <div class="flex gap-3 md:gap-4">
+                    <button onclick="confirmDelete()" class="flex-1 bg-red-600 py-2 md:py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors text-sm md:text-lg">
+                        🗑️ <span class="hidden sm:inline">Sim, </span>Excluir
+                    </button>
+                    <button onclick="hideDeleteModal()" class="flex-1 bg-gray-600 py-2 md:py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors text-sm md:text-lg">
+                        ↩️ Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let projects = JSON.parse(localStorage.getItem('projects')) || [];
+        let clients = JSON.parse(localStorage.getItem('clients')) || [];
+        let editingProjectId = null;
+        let editingClientId = null;
+        let deletingItemId = null;
+        let deletingItemType = null;
+        let currentFilter = 'todos';
+        let currentClientFilter = 'todos';
+        let lineChart = null;
+        let statusChart = null;
+        let priorityChart = null;
+        let currentPage = 'projects';
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        function saveProjects() {
+            localStorage.setItem('projects', JSON.stringify(projects));
+        }
+
+        function saveClients() {
+            localStorage.setItem('clients', JSON.stringify(clients));
+        }
+
+        function showNotification(title, message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notificationIcon');
+            const titleEl = document.getElementById('notificationTitle');
+            const messageEl = document.getElementById('notificationMessage');
+
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+
+            icon.textContent = icons[type] || icons.success;
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const dateString = now.toLocaleDateString('pt-BR', options);
+            document.getElementById('currentDate').textContent = dateString;
+            document.getElementById('currentDateClients').textContent = dateString;
+        }
+
+        function togglePage() {
+            const projectsPage = document.getElementById('projectsPage');
+            const clientsPage = document.getElementById('clientsPage');
+
+            if (currentPage === 'projects') {
+                // Switch to clients
+                projectsPage.classList.remove('active');
+                setTimeout(() => {
+                    projectsPage.style.display = 'none';
+                    clientsPage.style.display = 'block';
+                    setTimeout(() => {
+                        clientsPage.classList.add('active');
+                    }, 50);
+                }, 300);
+                
+                currentPage = 'clients';
+                renderClients();
+                updateClientStats();
+            } else {
+                // Switch to projects
+                clientsPage.classList.remove('active');
+                setTimeout(() => {
+                    clientsPage.style.display = 'none';
+                    projectsPage.style.display = 'block';
+                    setTimeout(() => {
+                        projectsPage.classList.add('active');
+                    }, 50);
+                }, 300);
+                
+                currentPage = 'projects';
+                renderProjects();
+                updateStats();
+            }
+        }
+
+        // Star Rating Functions
+        function initializeStarRating() {
+            const stars = document.querySelectorAll('.star');
+            const ratingValue = document.getElementById('clientRatingValue');
+            const ratingText = document.getElementById('ratingText');
+
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.dataset.rating);
+                    ratingValue.value = rating;
+                    updateStarDisplay(rating);
+                    updateRatingText(rating);
+                });
+
+                star.addEventListener('mouseenter', function() {
+                    const rating = parseInt(this.dataset.rating);
+                    updateStarDisplay(rating);
+                });
+            });
+
+            document.getElementById('clientRating').addEventListener('mouseleave', function() {
+                const currentRating = parseInt(ratingValue.value);
+                updateStarDisplay(currentRating);
+            });
+        }
+
+        function updateStarDisplay(rating) {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function updateRatingText(rating) {
+            const ratingText = document.getElementById('ratingText');
+            const texts = {
+                0: 'Clique nas estrelas para avaliar',
+                1: '⭐ Muito Insatisfeito',
+                2: '⭐⭐ Insatisfeito',
+                3: '⭐⭐⭐ Neutro',
+                4: '⭐⭐⭐⭐ Satisfeito',
+                5: '⭐⭐⭐⭐⭐ Muito Satisfeito'
+            };
+            ratingText.textContent = texts[rating] || texts[0];
+        }
+
+        function getStarDisplay(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '<span class="text-yellow-400">⭐</span>';
+                } else {
+                    stars += '<span class="text-gray-600">⭐</span>';
+                }
+            }
+            return stars;
+        }
+
+        // Client Functions
+        function updateClientStats() {
+            const total = clients.length;
+            const ratings = clients.map(c => c.rating || 0).filter(r => r > 0);
+            const averageRating = ratings.length > 0 ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : '0.0';
+            const fiveStarClients = clients.filter(c => c.rating === 5).length;
+            
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            const newThisMonth = clients.filter(c => {
+                const createdDate = new Date(c.createdAt);
+                return createdDate.getMonth() === currentMonth && createdDate.getFullYear() === currentYear;
+            }).length;
+
+            document.getElementById('totalClients').textContent = total;
+            document.getElementById('averageRating').textContent = averageRating;
+            document.getElementById('fiveStarClients').textContent = fiveStarClients;
+            document.getElementById('newClientsThisMonth').textContent = newThisMonth;
+        }
+
+        function filterClients(filter) {
+            currentClientFilter = filter;
+            
+            // Update button styles
+            document.querySelectorAll('[id^="filterClients"]').forEach(btn => {
+                if (btn.className.includes('gradient-purple-green')) {
+                    btn.className = btn.className.replace('gradient-purple-green', 'bg-gray-600');
+                }
+            });
+            
+            let activeBtn;
+            if (filter === 'todos') {
+                activeBtn = document.getElementById('filterClientsTodos');
+            } else if (filter === '5estrelas') {
+                activeBtn = document.getElementById('filterClients5estrelas');
+            } else if (filter === '4estrelas') {
+                activeBtn = document.getElementById('filterClients4estrelas');
+            } else if (filter === 'novos') {
+                activeBtn = document.getElementById('filterClientsNovos');
+            }
+            
+            if (activeBtn) {
+                activeBtn.className = activeBtn.className.replace('bg-gray-600', 'gradient-purple-green');
+            }
+            
+            renderClients();
+        }
+
+        function getFilteredClients() {
+            let filtered = [...clients];
+            
+            if (currentClientFilter === '5estrelas') {
+                filtered = filtered.filter(c => c.rating === 5);
+            } else if (currentClientFilter === '4estrelas') {
+                filtered = filtered.filter(c => c.rating >= 4);
+            } else if (currentClientFilter === 'novos') {
+                const currentMonth = new Date().getMonth();
+                const currentYear = new Date().getFullYear();
+                filtered = filtered.filter(c => {
+                    const createdDate = new Date(c.createdAt);
+                    return createdDate.getMonth() === currentMonth && createdDate.getFullYear() === currentYear;
+                });
+            }
+            
+            // Apply search filter
+            const searchTerm = document.getElementById('searchClientInput').value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(c => 
+                    c.name.toLowerCase().includes(searchTerm) || 
+                    (c.phone && c.phone.toLowerCase().includes(searchTerm)) ||
+                    (c.email && c.email.toLowerCase().includes(searchTerm)) ||
+                    (c.address && c.address.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            // Apply sorting
+            const sortBy = document.getElementById('sortClientSelect').value;
+            filtered.sort((a, b) => {
+                if (sortBy === 'nome') {
+                    return a.name.localeCompare(b.name);
+                } else if (sortBy === 'rating') {
+                    return (b.rating || 0) - (a.rating || 0);
+                } else if (sortBy === 'data') {
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                }
+                return 0;
+            });
+            
+            return filtered;
+        }
+
+        function renderClients() {
+            const clientsList = document.getElementById('clientsList');
+            const emptyState = document.getElementById('emptyClientState');
+            const filteredCount = document.getElementById('filteredClientCount');
+            const filteredClients = getFilteredClients();
+
+            filteredCount.textContent = filteredClients.length;
+
+            if (filteredClients.length === 0) {
+                clientsList.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            
+            clientsList.innerHTML = filteredClients.map(client => {
+                const createdDate = new Date(client.createdAt);
+                const isNew = (Date.now() - createdDate.getTime()) < (30 * 24 * 60 * 60 * 1000); // 30 days
+
+                return `
+                    <div class="glass-effect p-4 md:p-6 rounded-xl card-hover fade-in">
+                        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-4 space-y-4 lg:space-y-0">
+                            <div class="flex-1">
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
+                                    <h3 class="text-lg md:text-xl font-bold text-gradient">${client.name}</h3>
+                                    <div class="flex flex-wrap gap-2 items-center">
+                                        <div class="flex items-center">
+                                            ${getStarDisplay(client.rating || 0)}
+                                        </div>
+                                        ${isNew ? '<span class="px-2 py-1 bg-blue-600 text-white text-xs rounded-full">NOVO</span>' : ''}
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm mb-4">
+                                    <div class="flex items-center gap-2 text-gray-300">
+                                        <span>📞</span>
+                                        <span class="truncate">${client.phone}</span>
+                                    </div>
+                                    
+                                    ${client.email ? `
+                                        <div class="flex items-center gap-2 text-gray-300">
+                                            <span>📧</span>
+                                            <span class="truncate">${client.email}</span>
+                                        </div>
+                                    ` : ''}
+                                    
+                                    <div class="flex items-start gap-2 text-gray-300 sm:col-span-2">
+                                        <span>📍</span>
+                                        <span class="text-sm leading-relaxed">${client.address}</span>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2 text-gray-400 text-xs">
+                                        <span>📅</span>
+                                        <span>Cadastrado em ${createdDate.toLocaleDateString('pt-BR')}</span>
+                                    </div>
+                                </div>
+                                
+                                ${client.notes ? `
+                                    <div class="bg-white/5 p-3 rounded-lg mb-3">
+                                        <p class="text-xs md:text-sm text-gray-300 leading-relaxed">${client.notes}</p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="flex flex-col sm:flex-row gap-2 lg:ml-6 w-full sm:w-auto">
+                                <button onclick="editClient('${client.id}')" class="gradient-purple-green px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold hover:opacity-90 transition-opacity">
+                                    ✏️ <span class="hidden sm:inline">Editar</span>
+                                </button>
+                                <button onclick="showDeleteModal('${client.id}', 'client')" class="bg-red-600 px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-red-700 transition-colors">
+                                    🗑️ <span class="hidden sm:inline">Excluir</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showAddClientModal() {
+            editingClientId = null;
+            document.getElementById('clientModalTitle').textContent = 'Novo Cliente';
+            document.getElementById('clientForm').reset();
+            document.getElementById('clientRatingValue').value = '0';
+            updateStarDisplay(0);
+            updateRatingText(0);
+            
+            document.getElementById('clientModal').classList.remove('hidden');
+            document.getElementById('clientModal').classList.add('flex');
+            
+            // Initialize star rating after modal is shown
+            setTimeout(initializeStarRating, 100);
+        }
+
+        function editClient(id) {
+            const client = clients.find(c => c.id === id);
+            if (!client) return;
+
+            editingClientId = id;
+            document.getElementById('clientModalTitle').textContent = 'Editar Cliente';
+            document.getElementById('clientName').value = client.name;
+            document.getElementById('clientPhone').value = client.phone;
+            document.getElementById('clientEmail').value = client.email || '';
+            document.getElementById('clientAddress').value = client.address;
+            document.getElementById('clientNotes').value = client.notes || '';
+            document.getElementById('clientRatingValue').value = client.rating || 0;
+            
+            document.getElementById('clientModal').classList.remove('hidden');
+            document.getElementById('clientModal').classList.add('flex');
+            
+            // Initialize star rating and set current rating
+            setTimeout(() => {
+                initializeStarRating();
+                updateStarDisplay(client.rating || 0);
+                updateRatingText(client.rating || 0);
+            }, 100);
+        }
+
+        function hideClientModal() {
+            document.getElementById('clientModal').classList.add('hidden');
+            document.getElementById('clientModal').classList.remove('flex');
+        }
+
+        // Project Functions (keeping existing functionality)
+        function updateStats() {
+            const total = projects.length;
+            const inProgress = projects.filter(p => p.status === 'andamento').length;
+            const completed = projects.filter(p => p.status === 'concluido').length;
+            const overdue = projects.filter(p => {
+                if (!p.deadline) return false;
+                const deadline = new Date(p.deadline);
+                const today = new Date();
+                return deadline < today && p.status !== 'concluido';
+            }).length;
+
+            document.getElementById('totalProjects').textContent = total;
+            document.getElementById('inProgressProjects').textContent = inProgress;
+            document.getElementById('completedProjects').textContent = completed;
+            document.getElementById('overdueProjects').textContent = overdue;
+            
+            // Update charts
+            updateCharts();
+        }
+
+        function generateLineChartData() {
+            // Generate data for the last 7 days
+            const days = [];
+            const data = [];
+            const today = new Date();
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                days.push(date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
+                
+                // Count projects created up to this date
+                const projectsUpToDate = projects.filter(p => {
+                    const createdDate = new Date(p.createdAt);
+                    return createdDate <= date;
+                }).length;
+                
+                data.push(projectsUpToDate);
+            }
+            
+            return { days, data };
+        }
+
+        function generateStatusChartData() {
+            const statusCounts = {
+                'planejamento': 0,
+                'andamento': 0,
+                'concluido': 0,
+                'pausado': 0,
+                'cancelado': 0
+            };
+            
+            projects.forEach(project => {
+                statusCounts[project.status] = (statusCounts[project.status] || 0) + 1;
+            });
+            
+            return {
+                labels: ['📋 Planejamento', '⚡ Em Andamento', '✅ Concluído', '⏸️ Pausado', '❌ Cancelado'],
+                data: [
+                    statusCounts.planejamento,
+                    statusCounts.andamento,
+                    statusCounts.concluido,
+                    statusCounts.pausado,
+                    statusCounts.cancelado
+                ]
+            };
+        }
+
+        function generatePriorityChartData() {
+            const priorityCounts = {
+                'baixa': 0,
+                'media': 0,
+                'alta': 0,
+                'critica': 0
+            };
+            
+            projects.forEach(project => {
+                const priority = project.priority || 'media';
+                priorityCounts[priority] = (priorityCounts[priority] || 0) + 1;
+            });
+            
+            return {
+                labels: ['🟢 Baixa', '🟡 Média', '🟠 Alta', '🔴 Crítica'],
+                data: [
+                    priorityCounts.baixa,
+                    priorityCounts.media,
+                    priorityCounts.alta,
+                    priorityCounts.critica
+                ]
+            };
+        }
+
+        function getStatusInfo(status) {
+            const statusMap = {
+                'planejamento': { color: 'bg-blue-500', text: '📋 Planejamento', textColor: 'text-blue-400' },
+                'andamento': { color: 'bg-yellow-500', text: '⚡ Em Andamento', textColor: 'text-yellow-400' },
+                'concluido': { color: 'bg-green-500', text: '✅ Concluído', textColor: 'text-green-400' },
+                'pausado': { color: 'bg-gray-500', text: '⏸️ Pausado', textColor: 'text-gray-400' },
+                'cancelado': { color: 'bg-red-500', text: '❌ Cancelado', textColor: 'text-red-400' }
+            };
+            return statusMap[status] || statusMap['planejamento'];
+        }
+
+        function getPriorityInfo(priority) {
+            const priorityMap = {
+                'baixa': { color: 'bg-green-600', text: '🟢 Baixa', order: 1 },
+                'media': { color: 'bg-yellow-600', text: '🟡 Média', order: 2 },
+                'alta': { color: 'bg-orange-600', text: '🟠 Alta', order: 3 },
+                'critica': { color: 'bg-red-600', text: '🔴 Crítica', order: 4 }
+            };
+            return priorityMap[priority] || priorityMap['media'];
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Não definida';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        function formatCurrency(value) {
+            if (!value) return 'Não definido';
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
+
+        function isOverdue(deadline, status) {
+            if (!deadline || status === 'concluido' || status === 'cancelado') return false;
+            const deadlineDate = new Date(deadline);
+            const today = new Date();
+            return deadlineDate < today;
+        }
+
+        function getDaysUntilDeadline(deadline) {
+            if (!deadline) return null;
+            const deadlineDate = new Date(deadline);
+            const today = new Date();
+            const diffTime = deadlineDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        function filterProjects(filter) {
+            currentFilter = filter;
+            
+            // Update button styles
+            document.querySelectorAll('[id^="filter"]').forEach(btn => {
+                btn.className = btn.className.replace('gradient-purple-green', 'bg-gray-600');
+            });
+            
+            const activeBtn = document.getElementById(`filter${filter.charAt(0).toUpperCase() + filter.slice(1)}`);
+            if (activeBtn) {
+                activeBtn.className = activeBtn.className.replace('bg-gray-600', 'gradient-purple-green');
+            }
+            
+            renderProjects();
+        }
+
+        function getFilteredProjects() {
+            let filtered = [...projects];
+            
+            if (currentFilter === 'andamento') {
+                filtered = filtered.filter(p => p.status === 'andamento');
+            } else if (currentFilter === 'concluido') {
+                filtered = filtered.filter(p => p.status === 'concluido');
+            } else if (currentFilter === 'atrasados') {
+                filtered = filtered.filter(p => isOverdue(p.deadline, p.status));
+            }
+            
+            // Apply search filter
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(searchTerm) || 
+                    (p.description && p.description.toLowerCase().includes(searchTerm)) ||
+                    (p.client && p.client.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            // Apply sorting
+            const sortBy = document.getElementById('sortSelect').value;
+            filtered.sort((a, b) => {
+                if (sortBy === 'nome') {
+                    return a.name.localeCompare(b.name);
+                } else if (sortBy === 'data') {
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                } else if (sortBy === 'status') {
+                    return a.status.localeCompare(b.status);
+                } else if (sortBy === 'prioridade') {
+                    const aPriority = getPriorityInfo(a.priority || 'media').order;
+                    const bPriority = getPriorityInfo(b.priority || 'media').order;
+                    return bPriority - aPriority;
+                }
+                return 0;
+            });
+            
+            return filtered;
+        }
+
+        function initializeCharts() {
+            // Line Chart
+            const lineCtx = document.getElementById('projectsLineChart').getContext('2d');
+            const lineData = generateLineChartData();
+            
+            lineChart = new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: lineData.days,
+                    datasets: [{
+                        label: 'Total de Projetos',
+                        data: lineData.data,
+                        borderColor: 'rgb(139, 92, 246)',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgb(16, 185, 129)',
+                        pointBorderColor: 'rgb(16, 185, 129)',
+                        pointRadius: window.innerWidth < 768 ? 4 : 6,
+                        pointHoverRadius: window.innerWidth < 768 ? 6 : 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white',
+                                font: { size: window.innerWidth < 768 ? 10 : 14 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                stepSize: 1,
+                                font: { size: window.innerWidth < 768 ? 10 : 12 }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                font: { size: window.innerWidth < 768 ? 10 : 12 }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Status Chart
+            const statusCtx = document.getElementById('projectsStatusChart').getContext('2d');
+            const statusData = generateStatusChartData();
+            
+            statusChart = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: statusData.labels,
+                    datasets: [{
+                        data: statusData.data,
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(107, 114, 128, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgb(59, 130, 246)',
+                            'rgb(245, 158, 11)',
+                            'rgb(16, 185, 129)',
+                            'rgb(107, 114, 128)',
+                            'rgb(239, 68, 68)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: window.innerWidth < 768 ? 'bottom' : 'bottom',
+                            labels: {
+                                color: 'white',
+                                font: { size: window.innerWidth < 768 ? 8 : 12 },
+                                padding: window.innerWidth < 768 ? 10 : 20,
+                                usePointStyle: true,
+                                boxWidth: window.innerWidth < 768 ? 8 : 12
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Priority Bar Chart
+            const priorityCtx = document.getElementById('projectsPriorityChart').getContext('2d');
+            const priorityData = generatePriorityChartData();
+            
+            priorityChart = new Chart(priorityCtx, {
+                type: 'bar',
+                data: {
+                    labels: priorityData.labels,
+                    datasets: [{
+                        label: 'Quantidade de Projetos',
+                        data: priorityData.data,
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(249, 115, 22, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgb(34, 197, 94)',
+                            'rgb(245, 158, 11)',
+                            'rgb(249, 115, 22)',
+                            'rgb(239, 68, 68)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                stepSize: 1,
+                                font: { size: window.innerWidth < 768 ? 10 : 12 }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                font: { size: window.innerWidth < 768 ? 8 : 12 }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCharts() {
+            if (lineChart) {
+                const lineData = generateLineChartData();
+                lineChart.data.labels = lineData.days;
+                lineChart.data.datasets[0].data = lineData.data;
+                lineChart.update();
+            }
+            
+            if (statusChart) {
+                const statusData = generateStatusChartData();
+                statusChart.data.datasets[0].data = statusData.data;
+                statusChart.update();
+            }
+            
+            if (priorityChart) {
+                const priorityData = generatePriorityChartData();
+                priorityChart.data.datasets[0].data = priorityData.data;
+                priorityChart.update();
+            }
+        }
+
+        function renderProjects() {
+            const projectsList = document.getElementById('projectsList');
+            const emptyState = document.getElementById('emptyState');
+            const filteredCount = document.getElementById('filteredCount');
+            const filteredProjects = getFilteredProjects();
+
+            filteredCount.textContent = filteredProjects.length;
+
+            if (filteredProjects.length === 0) {
+                projectsList.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            
+            projectsList.innerHTML = filteredProjects.map(project => {
+                const statusInfo = getStatusInfo(project.status);
+                const priorityInfo = getPriorityInfo(project.priority || 'media');
+                const overdue = isOverdue(project.deadline, project.status);
+                const daysUntil = getDaysUntilDeadline(project.deadline);
+                
+                let deadlineText = formatDate(project.deadline);
+                let deadlineClass = 'text-gray-400';
+                
+                if (daysUntil !== null) {
+                    if (daysUntil < 0) {
+                        deadlineText += ` (${Math.abs(daysUntil)} dias atrasado)`;
+                        deadlineClass = 'text-red-400 pulse-alert';
+                    } else if (daysUntil === 0) {
+                        deadlineText += ' (Hoje!)';
+                        deadlineClass = 'text-yellow-400 pulse-alert';
+                    } else if (daysUntil <= 3) {
+                        deadlineText += ` (${daysUntil} dias restantes)`;
+                        deadlineClass = 'text-orange-400';
+                    } else if (daysUntil <= 7) {
+                        deadlineText += ` (${daysUntil} dias restantes)`;
+                        deadlineClass = 'text-yellow-400';
+                    }
+                }
+
+                return `
+                    <div class="glass-effect p-4 md:p-6 rounded-xl card-hover fade-in ${overdue ? 'border-red-500 border-2' : ''}">
+                        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-4 space-y-4 lg:space-y-0">
+                            <div class="flex-1">
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
+                                    <h3 class="text-lg md:text-xl font-bold text-gradient">${project.name}</h3>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-semibold ${priorityInfo.color} text-white">
+                                            ${priorityInfo.text}
+                                        </span>
+                                        ${overdue ? '<span class="px-2 py-1 bg-red-600 text-white text-xs rounded-full pulse-alert">ATRASADO</span>' : ''}
+                                    </div>
+                                </div>
+                                
+                                ${project.description ? `<p class="text-gray-300 mb-4 leading-relaxed text-sm md:text-base">${project.description}</p>` : ''}
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 text-xs md:text-sm mb-4">
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-1 md:px-3 md:py-1 rounded-full ${statusInfo.color} text-white font-medium text-xs">
+                                            ${statusInfo.text}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2 text-gray-400">
+                                        <span>🗓️</span>
+                                        <span class="truncate">Início: ${formatDate(project.startDate)}</span>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2 ${deadlineClass}">
+                                        <span>📅</span>
+                                        <span class="truncate">Entrega: ${deadlineText}</span>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2 text-gray-400">
+                                        <span>💰</span>
+                                        <span class="truncate">${formatCurrency(project.budget)}</span>
+                                    </div>
+                                </div>
+                                
+                                ${project.client ? `
+                                    <div class="flex items-center gap-2 text-xs md:text-sm text-gray-400 mb-2">
+                                        <span>👤</span>
+                                        <span class="truncate">Cliente: ${project.client}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="flex flex-col sm:flex-row gap-2 lg:ml-6 w-full sm:w-auto">
+                                <button onclick="editProject('${project.id}')" class="gradient-purple-green px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold hover:opacity-90 transition-opacity">
+                                    ✏️ <span class="hidden sm:inline">Editar</span>
+                                </button>
+                                <button onclick="showDeleteModal('${project.id}', 'project')" class="bg-red-600 px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-red-700 transition-colors">
+                                    🗑️ <span class="hidden sm:inline">Excluir</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showAddModal() {
+            editingProjectId = null;
+            document.getElementById('modalTitle').textContent = 'Novo Projeto';
+            document.getElementById('projectForm').reset();
+            
+            // Set default start date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('projectStartDate').value = today;
+            
+            document.getElementById('projectModal').classList.remove('hidden');
+            document.getElementById('projectModal').classList.add('flex');
+        }
+
+        function editProject(id) {
+            const project = projects.find(p => p.id === id);
+            if (!project) return;
+
+            editingProjectId = id;
+            document.getElementById('modalTitle').textContent = 'Editar Projeto';
+            document.getElementById('projectName').value = project.name;
+            document.getElementById('projectDescription').value = project.description || '';
+            document.getElementById('projectStatus').value = project.status;
+            document.getElementById('projectPriority').value = project.priority || 'media';
+            document.getElementById('projectStartDate').value = project.startDate || '';
+            document.getElementById('projectDeadline').value = project.deadline || '';
+            document.getElementById('projectClient').value = project.client || '';
+            document.getElementById('projectBudget').value = project.budget || '';
+            
+            document.getElementById('projectModal').classList.remove('hidden');
+            document.getElementById('projectModal').classList.add('flex');
+        }
+
+        function hideModal() {
+            document.getElementById('projectModal').classList.add('hidden');
+            document.getElementById('projectModal').classList.remove('flex');
+        }
+
+        function showDeleteModal(id, type) {
+            deletingItemId = id;
+            deletingItemType = type;
+            
+            const item = type === 'project' ? 
+                projects.find(p => p.id === id) : 
+                clients.find(c => c.id === id);
+            
+            const itemName = item ? item.name : 'este item';
+            const itemType = type === 'project' ? 'projeto' : 'cliente';
+            
+            document.getElementById('deleteMessage').textContent = 
+                `Tem certeza que deseja excluir o ${itemType} "${itemName}"?`;
+            
+            document.getElementById('deleteModal').classList.remove('hidden');
+            document.getElementById('deleteModal').classList.add('flex');
+        }
+
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            document.getElementById('deleteModal').classList.remove('flex');
+            deletingItemId = null;
+            deletingItemType = null;
+        }
+
+        function confirmDelete() {
+            if (deletingItemId && deletingItemType) {
+                if (deletingItemType === 'project') {
+                    const project = projects.find(p => p.id === deletingItemId);
+                    projects = projects.filter(p => p.id !== deletingItemId);
+                    saveProjects();
+                    renderProjects();
+                    updateStats();
+                    showNotification('Projeto Excluído', `O projeto "${project.name}" foi excluído com sucesso.`, 'success');
+                } else if (deletingItemType === 'client') {
+                    const client = clients.find(c => c.id === deletingItemId);
+                    clients = clients.filter(c => c.id !== deletingItemId);
+                    saveClients();
+                    renderClients();
+                    updateClientStats();
+                    showNotification('Cliente Excluído', `O cliente "${client.name}" foi excluído com sucesso.`, 'success');
+                }
+                hideDeleteModal();
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('projectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('projectName').value;
+            const description = document.getElementById('projectDescription').value;
+            const status = document.getElementById('projectStatus').value;
+            const priority = document.getElementById('projectPriority').value;
+            const startDate = document.getElementById('projectStartDate').value;
+            const deadline = document.getElementById('projectDeadline').value;
+            const client = document.getElementById('projectClient').value;
+            const budget = parseFloat(document.getElementById('projectBudget').value) || 0;
+
+            if (editingProjectId) {
+                const projectIndex = projects.findIndex(p => p.id === editingProjectId);
+                if (projectIndex !== -1) {
+                    projects[projectIndex] = {
+                        ...projects[projectIndex],
+                        name,
+                        description,
+                        status,
+                        priority,
+                        startDate,
+                        deadline,
+                        client,
+                        budget,
+                        updatedAt: new Date().toISOString()
+                    };
+                    showNotification('Projeto Atualizado', `O projeto "${name}" foi atualizado com sucesso.`, 'success');
+                }
+            } else {
+                const newProject = {
+                    id: generateId(),
+                    name,
+                    description,
+                    status,
+                    priority,
+                    startDate,
+                    deadline,
+                    client,
+                    budget,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                projects.push(newProject);
+                showNotification('Projeto Criado', `O projeto "${name}" foi criado com sucesso.`, 'success');
+            }
+
+            saveProjects();
+            renderProjects();
+            updateStats();
+            hideModal();
+        });
+
+        document.getElementById('clientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('clientName').value;
+            const phone = document.getElementById('clientPhone').value;
+            const email = document.getElementById('clientEmail').value;
+            const address = document.getElementById('clientAddress').value;
+            const rating = parseInt(document.getElementById('clientRatingValue').value) || 0;
+            const notes = document.getElementById('clientNotes').value;
+
+            if (editingClientId) {
+                const clientIndex = clients.findIndex(c => c.id === editingClientId);
+                if (clientIndex !== -1) {
+                    clients[clientIndex] = {
+                        ...clients[clientIndex],
+                        name,
+                        phone,
+                        email,
+                        address,
+                        rating,
+                        notes,
+                        updatedAt: new Date().toISOString()
+                    };
+                    showNotification('Cliente Atualizado', `O cliente "${name}" foi atualizado com sucesso.`, 'success');
+                }
+            } else {
+                const newClient = {
+                    id: generateId(),
+                    name,
+                    phone,
+                    email,
+                    address,
+                    rating,
+                    notes,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                clients.push(newClient);
+                showNotification('Cliente Cadastrado', `O cliente "${name}" foi cadastrado com sucesso.`, 'success');
+            }
+
+            saveClients();
+            renderClients();
+            updateClientStats();
+            hideClientModal();
+        });
+
+        document.getElementById('searchInput').addEventListener('input', renderProjects);
+        document.getElementById('sortSelect').addEventListener('change', renderProjects);
+        document.getElementById('searchClientInput').addEventListener('input', renderClients);
+        document.getElementById('sortClientSelect').addEventListener('change', renderClients);
+
+        // Close modals when clicking outside
+        document.getElementById('projectModal').addEventListener('click', function(e) {
+            if (e.target === this) hideModal();
+        });
+
+        document.getElementById('clientModal').addEventListener('click', function(e) {
+            if (e.target === this) hideClientModal();
+        });
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) hideDeleteModal();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideModal();
+                hideClientModal();
+                hideDeleteModal();
+            }
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                if (currentPage === 'projects') {
+                    showAddModal();
+                } else {
+                    showAddClientModal();
+                }
+            }
+        });
+
+        // Initialize the app
+        updateCurrentDate();
+        renderProjects();
+        updateStats();
+        initializeCharts();
+        
+        // Update date every minute
+        setInterval(updateCurrentDate, 60000);
+
+        // Initialize clients page display
+        document.getElementById('clientsPage').style.display = 'none';
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'970638bf055309d7',t:'MTc1NTQwMjc3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
