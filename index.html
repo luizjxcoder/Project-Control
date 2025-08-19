@@ -179,6 +179,9 @@
                         <button onclick="togglePage()" class="bg-purple-600 px-3 py-2 md:px-4 md:py-2 rounded-lg font-semibold hover:bg-purple-700 transition-all duration-300 text-xs md:text-sm">
                             👥 <span class="hidden sm:inline">Ver </span>Clientes
                         </button>
+                        <button onclick="showBackupModal()" class="bg-blue-600 px-3 py-2 md:px-4 md:py-2 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 text-xs md:text-sm">
+                            💾 <span class="hidden sm:inline">Backup</span>
+                        </button>
                         <button onclick="showAddModal()" class="gradient-green-purple px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base">
                             <span class="mr-1 md:mr-2">+</span> <span class="hidden sm:inline">Novo </span>Projeto
                         </button>
@@ -367,6 +370,9 @@
                     <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
                         <button onclick="togglePage()" class="bg-blue-600 px-3 py-2 md:px-4 md:py-2 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 text-xs md:text-sm">
                             📊 <span class="hidden sm:inline">Ver </span>Projetos
+                        </button>
+                        <button onclick="showBackupModal()" class="bg-green-600 px-3 py-2 md:px-4 md:py-2 rounded-lg font-semibold hover:bg-green-700 transition-all duration-300 text-xs md:text-sm">
+                            💾 <span class="hidden sm:inline">Backup</span>
                         </button>
                         <button onclick="showAddClientModal()" class="gradient-green-purple px-4 py-2 md:px-6 md:py-3 rounded-xl font-semibold hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base">
                             <span class="mr-1 md:mr-2">+</span> <span class="hidden sm:inline">Novo </span>Cliente
@@ -651,6 +657,178 @@
         </div>
     </div>
 
+    <!-- Backup Modal -->
+    <div id="backupModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-2 md:p-4">
+        <div class="glass-effect p-4 md:p-8 rounded-xl max-w-2xl w-full slide-up max-h-[95vh] md:max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4 md:mb-6">
+                <div class="flex items-center space-x-2 md:space-x-3">
+                    <div class="w-8 h-8 md:w-10 md:h-10 gradient-green-purple rounded-lg flex items-center justify-center">
+                        <span class="text-lg md:text-xl">💾</span>
+                    </div>
+                    <h3 class="text-base md:text-2xl font-bold text-gradient">Backup e Exportação</h3>
+                </div>
+                <button onclick="hideBackupModal()" class="text-gray-400 hover:text-white text-2xl md:text-3xl transition-colors p-1">&times;</button>
+            </div>
+            
+            <div class="space-y-4 md:space-y-6">
+                <!-- Export Section -->
+                <div class="glass-effect p-4 md:p-6 rounded-xl">
+                    <h4 class="text-lg font-bold text-gradient mb-4 flex items-center gap-2">
+                        📤 Exportar Dados
+                    </h4>
+                    <p class="text-gray-300 mb-4 text-sm md:text-base">
+                        Baixe seus dados em formato JSON para fazer backup local ou transferir para outro dispositivo.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-4">
+                        <div class="bg-white/5 p-3 md:p-4 rounded-lg text-center">
+                            <div class="text-2xl mb-2">📊</div>
+                            <h5 class="font-semibold mb-2">Projetos</h5>
+                            <p class="text-xs text-gray-400 mb-3" id="projectsCount">0 projetos cadastrados</p>
+                            <button onclick="exportProjects()" class="w-full bg-blue-600 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
+                                📥 Exportar Projetos
+                            </button>
+                        </div>
+                        
+                        <div class="bg-white/5 p-3 md:p-4 rounded-lg text-center">
+                            <div class="text-2xl mb-2">👥</div>
+                            <h5 class="font-semibold mb-2">Clientes</h5>
+                            <p class="text-xs text-gray-400 mb-3" id="clientsCount">0 clientes cadastrados</p>
+                            <button onclick="exportClients()" class="w-full bg-purple-600 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-purple-700 transition-colors">
+                                📥 Exportar Clientes
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button onclick="exportAll()" class="w-full gradient-green-purple py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity text-sm md:text-base">
+                        📦 Exportar Tudo (Projetos + Clientes)
+                    </button>
+                </div>
+                
+                <!-- Import Section -->
+                <div class="glass-effect p-4 md:p-6 rounded-xl">
+                    <h4 class="text-lg font-bold text-gradient mb-4 flex items-center gap-2">
+                        📥 Importar Dados
+                    </h4>
+                    <p class="text-gray-300 mb-4 text-sm md:text-base">
+                        Restaure seus dados a partir de um arquivo JSON exportado anteriormente.
+                    </p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-center w-full">
+                            <label for="importFile" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-600 border-dashed rounded-lg cursor-pointer bg-white/5 hover:bg-white/10 transition-colors">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <div class="text-3xl mb-2">📁</div>
+                                    <p class="mb-2 text-sm text-gray-300">
+                                        <span class="font-semibold">Clique para selecionar</span> ou arraste o arquivo
+                                    </p>
+                                    <p class="text-xs text-gray-400">Apenas arquivos JSON</p>
+                                </div>
+                                <input id="importFile" type="file" class="hidden" accept=".json" onchange="handleFileImport(event)">
+                            </label>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <button onclick="importData('merge')" class="flex-1 bg-green-600 py-2 px-3 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors" id="mergeBtn" disabled>
+                                🔄 Mesclar Dados
+                            </button>
+                            <button onclick="importData('replace')" class="flex-1 bg-orange-600 py-2 px-3 rounded-lg text-sm font-semibold hover:bg-orange-700 transition-colors" id="replaceBtn" disabled>
+                                ⚠️ Substituir Tudo
+                            </button>
+                        </div>
+                        
+                        <div id="importPreview" class="hidden bg-white/5 p-3 rounded-lg">
+                            <h5 class="font-semibold mb-2 text-sm">Prévia do arquivo:</h5>
+                            <div id="importDetails" class="text-xs text-gray-300"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Supabase Section -->
+                <div class="glass-effect p-4 md:p-6 rounded-xl">
+                    <h4 class="text-lg font-bold text-gradient mb-4 flex items-center gap-2">
+                        ☁️ Backup Online (Supabase)
+                    </h4>
+                    
+                    <!-- Connection Status -->
+                    <div class="mb-4 p-3 rounded-lg" id="supabaseStatus">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full" id="connectionIndicator"></div>
+                            <span class="font-semibold text-sm" id="connectionText">Desconectado</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Configuration Form -->
+                    <div id="supabaseConfig" class="space-y-3 mb-4">
+                        <div>
+                            <label class="block text-xs font-medium mb-1 text-gray-300">URL do Supabase</label>
+                            <input type="url" id="supabaseUrl" placeholder="https://seu-projeto.supabase.co" 
+                                   class="w-full p-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium mb-1 text-gray-300">Chave Anônima (anon key)</label>
+                            <input type="password" id="supabaseKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." 
+                                   class="w-full p-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium mb-1 text-gray-300">ID do Usuário (opcional)</label>
+                            <input type="text" id="supabaseUserId" placeholder="user-123 ou deixe vazio para usar ID automático" 
+                                   class="w-full p-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="connectSupabase()" class="flex-1 bg-blue-600 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
+                                🔗 Conectar
+                            </button>
+                            <button onclick="disconnectSupabase()" class="flex-1 bg-gray-600 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors">
+                                🔌 Desconectar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Online Backup Actions -->
+                    <div class="space-y-3" id="supabaseActions">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button onclick="backupToSupabase()" class="bg-green-600 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors" id="backupBtn" disabled>
+                                ☁️ Fazer Backup Online
+                            </button>
+                            <button onclick="restoreFromSupabase()" class="bg-purple-600 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-purple-700 transition-colors" id="restoreBtn" disabled>
+                                📥 Restaurar do Online
+                            </button>
+                        </div>
+                        <button onclick="syncWithSupabase()" class="w-full bg-orange-600 px-3 py-2 rounded-lg text-sm font-semibold hover:bg-orange-700 transition-colors" id="syncBtn" disabled>
+                            🔄 Sincronizar Dados
+                        </button>
+                        <div class="text-xs text-gray-400 text-center" id="lastSyncInfo">
+                            Nunca sincronizado
+                        </div>
+                    </div>
+                    
+                    <!-- Help Section -->
+                    <div class="bg-blue-500/10 border border-blue-500/30 p-3 rounded-lg mt-4">
+                        <div class="flex items-start gap-2">
+                            <span class="text-blue-400 text-lg">ℹ️</span>
+                            <div>
+                                <p class="text-blue-400 font-semibold text-sm">Como configurar o Supabase</p>
+                                <p class="text-gray-300 text-xs mt-1">
+                                    1. Crie uma conta gratuita em <a href="https://supabase.com" target="_blank" class="text-blue-400 underline">supabase.com</a><br>
+                                    2. Crie um novo projeto<br>
+                                    3. Vá em Settings → API e copie a URL e a chave anônima<br>
+                                    4. Cole as informações acima e clique em "Conectar"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 md:gap-4 pt-4 md:pt-6">
+                <button onclick="hideBackupModal()" class="flex-1 bg-gray-600 py-3 md:py-4 rounded-lg font-semibold hover:bg-gray-700 transition-colors text-sm md:text-lg">
+                    ✖️ Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Confirmation Modal -->
     <div id="deleteModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
         <div class="glass-effect p-4 md:p-8 rounded-xl max-w-md w-full slide-up">
@@ -673,6 +851,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         let projects = JSON.parse(localStorage.getItem('projects')) || [];
         let clients = JSON.parse(localStorage.getItem('clients')) || [];
@@ -686,6 +865,16 @@
         let statusChart = null;
         let priorityChart = null;
         let currentPage = 'projects';
+        let importedData = null;
+
+        // Supabase Configuration
+        let supabase = null;
+        let isSupabaseConnected = false;
+        let supabaseConfig = JSON.parse(localStorage.getItem('supabaseConfig')) || {
+            url: '',
+            key: '',
+            userId: ''
+        };
 
         function generateId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2);
@@ -1620,6 +1809,531 @@
             }
         }
 
+        // Supabase Functions
+        function initializeSupabase() {
+            if (supabaseConfig.url && supabaseConfig.key) {
+                try {
+                    supabase = window.supabase.createClient(supabaseConfig.url, supabaseConfig.key);
+                    isSupabaseConnected = true;
+                    updateSupabaseUI();
+                    testSupabaseConnection();
+                } catch (error) {
+                    console.error('Erro ao inicializar Supabase:', error);
+                    isSupabaseConnected = false;
+                    updateSupabaseUI();
+                }
+            } else {
+                updateSupabaseUI();
+            }
+        }
+
+        function updateSupabaseUI() {
+            const indicator = document.getElementById('connectionIndicator');
+            const text = document.getElementById('connectionText');
+            const status = document.getElementById('supabaseStatus');
+            const backupBtn = document.getElementById('backupBtn');
+            const restoreBtn = document.getElementById('restoreBtn');
+            const syncBtn = document.getElementById('syncBtn');
+
+            if (isSupabaseConnected) {
+                indicator.className = 'w-3 h-3 rounded-full bg-green-500';
+                text.textContent = 'Conectado';
+                status.className = 'mb-4 p-3 rounded-lg bg-green-500/10 border border-green-500/30';
+                backupBtn.disabled = false;
+                restoreBtn.disabled = false;
+                syncBtn.disabled = false;
+            } else {
+                indicator.className = 'w-3 h-3 rounded-full bg-red-500';
+                text.textContent = 'Desconectado';
+                status.className = 'mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30';
+                backupBtn.disabled = true;
+                restoreBtn.disabled = true;
+                syncBtn.disabled = true;
+            }
+
+            // Load saved config
+            document.getElementById('supabaseUrl').value = supabaseConfig.url || '';
+            document.getElementById('supabaseKey').value = supabaseConfig.key || '';
+            document.getElementById('supabaseUserId').value = supabaseConfig.userId || '';
+
+            // Update last sync info
+            const lastSync = localStorage.getItem('lastSupabaseSync');
+            const lastSyncInfo = document.getElementById('lastSyncInfo');
+            if (lastSync) {
+                const date = new Date(lastSync);
+                lastSyncInfo.textContent = `Última sincronização: ${date.toLocaleString('pt-BR')}`;
+            } else {
+                lastSyncInfo.textContent = 'Nunca sincronizado';
+            }
+        }
+
+        async function testSupabaseConnection() {
+            if (!supabase) return false;
+            
+            try {
+                // Test connection by trying to select from a simple query
+                const { data, error } = await supabase.from('user_backups').select('id').limit(1);
+                if (error && error.code === 'PGRST116') {
+                    // Table doesn't exist, create it
+                    await createSupabaseTables();
+                }
+                return true;
+            } catch (error) {
+                console.error('Erro na conexão com Supabase:', error);
+                isSupabaseConnected = false;
+                updateSupabaseUI();
+                return false;
+            }
+        }
+
+        async function createSupabaseTables() {
+            if (!supabase) return;
+
+            try {
+                // Create user_backups table via RPC or direct SQL
+                const { error } = await supabase.rpc('create_backup_tables');
+                if (error) {
+                    console.log('Tabelas podem já existir ou precisam ser criadas manualmente');
+                }
+            } catch (error) {
+                console.log('Tabelas precisam ser criadas manualmente no Supabase');
+            }
+        }
+
+        function connectSupabase() {
+            const url = document.getElementById('supabaseUrl').value.trim();
+            const key = document.getElementById('supabaseKey').value.trim();
+            const userId = document.getElementById('supabaseUserId').value.trim() || `user_${Date.now()}`;
+
+            if (!url || !key) {
+                showNotification('Configuração Incompleta', 'Por favor, preencha a URL e a chave do Supabase.', 'warning');
+                return;
+            }
+
+            try {
+                supabase = window.supabase.createClient(url, key);
+                supabaseConfig = { url, key, userId };
+                localStorage.setItem('supabaseConfig', JSON.stringify(supabaseConfig));
+                isSupabaseConnected = true;
+                updateSupabaseUI();
+                testSupabaseConnection();
+                showNotification('Conectado!', 'Conexão com Supabase estabelecida com sucesso.', 'success');
+            } catch (error) {
+                console.error('Erro ao conectar:', error);
+                showNotification('Erro de Conexão', 'Verifique as credenciais do Supabase.', 'error');
+                isSupabaseConnected = false;
+                updateSupabaseUI();
+            }
+        }
+
+        function disconnectSupabase() {
+            supabase = null;
+            isSupabaseConnected = false;
+            supabaseConfig = { url: '', key: '', userId: '' };
+            localStorage.removeItem('supabaseConfig');
+            localStorage.removeItem('lastSupabaseSync');
+            updateSupabaseUI();
+            showNotification('Desconectado', 'Conexão com Supabase removida.', 'info');
+        }
+
+        async function backupToSupabase() {
+            if (!supabase || !isSupabaseConnected) {
+                showNotification('Não Conectado', 'Conecte-se ao Supabase primeiro.', 'warning');
+                return;
+            }
+
+            try {
+                const backupData = {
+                    user_id: supabaseConfig.userId,
+                    backup_date: new Date().toISOString(),
+                    projects_count: projects.length,
+                    clients_count: clients.length,
+                    projects_data: projects,
+                    clients_data: clients,
+                    version: '1.0'
+                };
+
+                const { data, error } = await supabase
+                    .from('user_backups')
+                    .upsert(backupData, { 
+                        onConflict: 'user_id',
+                        returning: 'minimal'
+                    });
+
+                if (error) {
+                    throw error;
+                }
+
+                localStorage.setItem('lastSupabaseSync', new Date().toISOString());
+                updateSupabaseUI();
+                showNotification('Backup Realizado!', `Dados salvos na nuvem: ${projects.length} projetos e ${clients.length} clientes.`, 'success');
+            } catch (error) {
+                console.error('Erro no backup:', error);
+                if (error.code === 'PGRST116') {
+                    showNotification('Tabela Não Encontrada', 'Execute o SQL de criação das tabelas no Supabase Dashboard.', 'error');
+                } else {
+                    showNotification('Erro no Backup', 'Falha ao salvar dados na nuvem. Verifique a conexão.', 'error');
+                }
+            }
+        }
+
+        async function restoreFromSupabase() {
+            if (!supabase || !isSupabaseConnected) {
+                showNotification('Não Conectado', 'Conecte-se ao Supabase primeiro.', 'warning');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from('user_backups')
+                    .select('*')
+                    .eq('user_id', supabaseConfig.userId)
+                    .single();
+
+                if (error) {
+                    if (error.code === 'PGRST116') {
+                        throw new Error('Tabela não encontrada. Execute o SQL de criação no Supabase.');
+                    }
+                    throw error;
+                }
+
+                if (!data) {
+                    showNotification('Nenhum Backup', 'Nenhum backup encontrado na nuvem para este usuário.', 'info');
+                    return;
+                }
+
+                // Confirm restore
+                if (!confirm(`Restaurar backup de ${new Date(data.backup_date).toLocaleString('pt-BR')}?\n\nIsso substituirá todos os dados locais:\n- ${data.projects_count} projetos\n- ${data.clients_count} clientes\n\nEsta ação não pode ser desfeita.`)) {
+                    return;
+                }
+
+                // Restore data
+                projects = data.projects_data || [];
+                clients = data.clients_data || [];
+
+                saveProjects();
+                saveClients();
+
+                // Update UI
+                if (currentPage === 'projects') {
+                    renderProjects();
+                    updateStats();
+                } else {
+                    renderClients();
+                    updateClientStats();
+                }
+
+                localStorage.setItem('lastSupabaseSync', new Date().toISOString());
+                updateSupabaseUI();
+                showNotification('Dados Restaurados!', `Backup restaurado: ${projects.length} projetos e ${clients.length} clientes.`, 'success');
+            } catch (error) {
+                console.error('Erro na restauração:', error);
+                showNotification('Erro na Restauração', error.message || 'Falha ao restaurar dados da nuvem.', 'error');
+            }
+        }
+
+        async function syncWithSupabase() {
+            if (!supabase || !isSupabaseConnected) {
+                showNotification('Não Conectado', 'Conecte-se ao Supabase primeiro.', 'warning');
+                return;
+            }
+
+            try {
+                // Get remote data
+                const { data: remoteData, error } = await supabase
+                    .from('user_backups')
+                    .select('*')
+                    .eq('user_id', supabaseConfig.userId)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    throw error;
+                }
+
+                const localLastModified = Math.max(
+                    ...projects.map(p => new Date(p.updatedAt || p.createdAt).getTime()),
+                    ...clients.map(c => new Date(c.updatedAt || c.createdAt).getTime()),
+                    0
+                );
+
+                const remoteLastModified = remoteData ? new Date(remoteData.backup_date).getTime() : 0;
+
+                if (remoteLastModified > localLastModified) {
+                    // Remote is newer, ask to pull
+                    if (confirm(`Dados mais recentes encontrados na nuvem (${new Date(remoteData.backup_date).toLocaleString('pt-BR')}).\n\nDeseja baixar os dados da nuvem?`)) {
+                        await restoreFromSupabase();
+                    }
+                } else if (localLastModified > remoteLastModified) {
+                    // Local is newer, ask to push
+                    if (confirm(`Seus dados locais são mais recentes.\n\nDeseja enviar para a nuvem?`)) {
+                        await backupToSupabase();
+                    }
+                } else {
+                    // Same or no remote data, just backup
+                    await backupToSupabase();
+                }
+            } catch (error) {
+                console.error('Erro na sincronização:', error);
+                showNotification('Erro na Sincronização', 'Falha ao sincronizar com a nuvem.', 'error');
+            }
+        }
+
+        // Backup and Export Functions
+        function showBackupModal() {
+            updateBackupCounts();
+            initializeSupabase();
+            document.getElementById('backupModal').classList.remove('hidden');
+            document.getElementById('backupModal').classList.add('flex');
+        }
+
+        function hideBackupModal() {
+            document.getElementById('backupModal').classList.add('hidden');
+            document.getElementById('backupModal').classList.remove('flex');
+            // Reset import state
+            document.getElementById('importFile').value = '';
+            document.getElementById('importPreview').classList.add('hidden');
+            document.getElementById('mergeBtn').disabled = true;
+            document.getElementById('replaceBtn').disabled = true;
+            importedData = null;
+        }
+
+        function updateBackupCounts() {
+            document.getElementById('projectsCount').textContent = `${projects.length} projetos cadastrados`;
+            document.getElementById('clientsCount').textContent = `${clients.length} clientes cadastrados`;
+        }
+
+        function downloadJSON(data, filename) {
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportProjects() {
+            if (projects.length === 0) {
+                showNotification('Nenhum Projeto', 'Não há projetos para exportar.', 'warning');
+                return;
+            }
+
+            const exportData = {
+                type: 'projects',
+                version: '1.0',
+                exportDate: new Date().toISOString(),
+                count: projects.length,
+                data: projects
+            };
+
+            const filename = `projetos_backup_${new Date().toISOString().split('T')[0]}.json`;
+            downloadJSON(exportData, filename);
+            showNotification('Exportação Concluída', `${projects.length} projetos exportados com sucesso!`, 'success');
+        }
+
+        function exportClients() {
+            if (clients.length === 0) {
+                showNotification('Nenhum Cliente', 'Não há clientes para exportar.', 'warning');
+                return;
+            }
+
+            const exportData = {
+                type: 'clients',
+                version: '1.0',
+                exportDate: new Date().toISOString(),
+                count: clients.length,
+                data: clients
+            };
+
+            const filename = `clientes_backup_${new Date().toISOString().split('T')[0]}.json`;
+            downloadJSON(exportData, filename);
+            showNotification('Exportação Concluída', `${clients.length} clientes exportados com sucesso!`, 'success');
+        }
+
+        function exportAll() {
+            if (projects.length === 0 && clients.length === 0) {
+                showNotification('Nenhum Dado', 'Não há dados para exportar.', 'warning');
+                return;
+            }
+
+            const exportData = {
+                type: 'complete_backup',
+                version: '1.0',
+                exportDate: new Date().toISOString(),
+                projects: {
+                    count: projects.length,
+                    data: projects
+                },
+                clients: {
+                    count: clients.length,
+                    data: clients
+                }
+            };
+
+            const filename = `backup_completo_${new Date().toISOString().split('T')[0]}.json`;
+            downloadJSON(exportData, filename);
+            showNotification('Backup Completo', `Backup completo criado: ${projects.length} projetos e ${clients.length} clientes!`, 'success');
+        }
+
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.type !== 'application/json') {
+                showNotification('Arquivo Inválido', 'Por favor, selecione um arquivo JSON válido.', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    validateAndPreviewImport(data);
+                } catch (error) {
+                    showNotification('Erro no Arquivo', 'Arquivo JSON inválido ou corrompido.', 'error');
+                    console.error('Import error:', error);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function validateAndPreviewImport(data) {
+            // Validate data structure
+            if (!data || typeof data !== 'object') {
+                showNotification('Formato Inválido', 'Estrutura do arquivo não reconhecida.', 'error');
+                return;
+            }
+
+            let projectsToImport = [];
+            let clientsToImport = [];
+            let details = [];
+
+            // Handle different export formats
+            if (data.type === 'projects' && data.data) {
+                projectsToImport = Array.isArray(data.data) ? data.data : [];
+                details.push(`📊 ${projectsToImport.length} projetos encontrados`);
+            } else if (data.type === 'clients' && data.data) {
+                clientsToImport = Array.isArray(data.data) ? data.data : [];
+                details.push(`👥 ${clientsToImport.length} clientes encontrados`);
+            } else if (data.type === 'complete_backup') {
+                if (data.projects && data.projects.data) {
+                    projectsToImport = Array.isArray(data.projects.data) ? data.projects.data : [];
+                    details.push(`📊 ${projectsToImport.length} projetos encontrados`);
+                }
+                if (data.clients && data.clients.data) {
+                    clientsToImport = Array.isArray(data.clients.data) ? data.clients.data : [];
+                    details.push(`👥 ${clientsToImport.length} clientes encontrados`);
+                }
+            } else {
+                // Try to detect if it's a direct array of projects or clients
+                if (Array.isArray(data)) {
+                    if (data.length > 0 && data[0].hasOwnProperty('status')) {
+                        projectsToImport = data;
+                        details.push(`📊 ${projectsToImport.length} projetos detectados`);
+                    } else if (data.length > 0 && data[0].hasOwnProperty('phone')) {
+                        clientsToImport = data;
+                        details.push(`👥 ${clientsToImport.length} clientes detectados`);
+                    }
+                }
+            }
+
+            if (projectsToImport.length === 0 && clientsToImport.length === 0) {
+                showNotification('Nenhum Dado', 'Nenhum projeto ou cliente válido encontrado no arquivo.', 'warning');
+                return;
+            }
+
+            // Store validated data
+            importedData = {
+                projects: projectsToImport,
+                clients: clientsToImport
+            };
+
+            // Show preview
+            if (data.exportDate) {
+                details.push(`📅 Exportado em: ${new Date(data.exportDate).toLocaleDateString('pt-BR')}`);
+            }
+
+            document.getElementById('importDetails').innerHTML = details.join('<br>');
+            document.getElementById('importPreview').classList.remove('hidden');
+            document.getElementById('mergeBtn').disabled = false;
+            document.getElementById('replaceBtn').disabled = false;
+
+            showNotification('Arquivo Carregado', 'Arquivo validado com sucesso! Escolha como importar os dados.', 'success');
+        }
+
+        function importData(mode) {
+            if (!importedData) {
+                showNotification('Erro', 'Nenhum arquivo carregado para importar.', 'error');
+                return;
+            }
+
+            let importedProjects = 0;
+            let importedClients = 0;
+            let duplicatesSkipped = 0;
+
+            if (mode === 'replace') {
+                // Replace all data
+                if (importedData.projects.length > 0) {
+                    projects = [...importedData.projects];
+                    importedProjects = projects.length;
+                }
+                if (importedData.clients.length > 0) {
+                    clients = [...importedData.clients];
+                    importedClients = clients.length;
+                }
+            } else if (mode === 'merge') {
+                // Merge data, avoiding duplicates by ID
+                const existingProjectIds = new Set(projects.map(p => p.id));
+                const existingClientIds = new Set(clients.map(c => c.id));
+
+                // Import projects
+                importedData.projects.forEach(project => {
+                    if (!existingProjectIds.has(project.id)) {
+                        projects.push(project);
+                        importedProjects++;
+                    } else {
+                        duplicatesSkipped++;
+                    }
+                });
+
+                // Import clients
+                importedData.clients.forEach(client => {
+                    if (!existingClientIds.has(client.id)) {
+                        clients.push(client);
+                        importedClients++;
+                    } else {
+                        duplicatesSkipped++;
+                    }
+                });
+            }
+
+            // Save to localStorage
+            saveProjects();
+            saveClients();
+
+            // Update UI
+            if (currentPage === 'projects') {
+                renderProjects();
+                updateStats();
+            } else {
+                renderClients();
+                updateClientStats();
+            }
+
+            // Show success message
+            let message = `Importação concluída! `;
+            if (importedProjects > 0) message += `${importedProjects} projetos `;
+            if (importedClients > 0) message += `${importedClients} clientes `;
+            message += `importados.`;
+            if (duplicatesSkipped > 0) message += ` ${duplicatesSkipped} duplicatas ignoradas.`;
+
+            showNotification('Importação Concluída', message, 'success');
+            hideBackupModal();
+        }
+
         // Event Listeners
         document.getElementById('projectForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1739,12 +2453,17 @@
             if (e.target === this) hideDeleteModal();
         });
 
+        document.getElementById('backupModal').addEventListener('click', function(e) {
+            if (e.target === this) hideBackupModal();
+        });
+
         // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 hideModal();
                 hideClientModal();
                 hideDeleteModal();
+                hideBackupModal();
             }
             if (e.ctrlKey && e.key === 'n') {
                 e.preventDefault();
@@ -1754,6 +2473,10 @@
                     showAddClientModal();
                 }
             }
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                showBackupModal();
+            }
         });
 
         // Initialize the app
@@ -1761,6 +2484,7 @@
         renderProjects();
         updateStats();
         initializeCharts();
+        initializeSupabase();
         
         // Update date every minute
         setInterval(updateCurrentDate, 60000);
@@ -1768,5 +2492,5 @@
         // Initialize clients page display
         document.getElementById('clientsPage').style.display = 'none';
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'970638bf055309d7',t:'MTc1NTQwMjc3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'971633dad2ccf1dd',t:'MTc1NTU3MDM0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
