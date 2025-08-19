@@ -139,6 +139,13 @@
             transform: translateY(0);
         }
 
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
 
     </style>
 </head>
@@ -304,11 +311,11 @@
                     
                     <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
                         <input type="text" id="searchInput" placeholder="🔍 Buscar projetos..." class="flex-1 px-3 py-2 md:px-4 md:py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
-                        <select id="sortSelect" class="px-3 py-2 md:px-4 md:py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
-                            <option value="nome">📝 Por Nome</option>
-                            <option value="data">📅 Por Data</option>
-                            <option value="status">📊 Por Status</option>
-                            <option value="prioridade">🔥 Por Prioridade</option>
+                        <select id="sortSelect" class="px-3 py-2 md:px-4 md:py-2 rounded-lg bg-gray-800 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                            <option value="nome" class="bg-gray-800 text-white">📝 Por Nome</option>
+                            <option value="data" class="bg-gray-800 text-white">📅 Por Data</option>
+                            <option value="status" class="bg-gray-800 text-white">📊 Por Status</option>
+                            <option value="prioridade" class="bg-gray-800 text-white">🔥 Por Prioridade</option>
                         </select>
                     </div>
                 </div>
@@ -434,11 +441,11 @@
                         </div>
                         <div class="text-center md:text-right">
                             <p class="text-xl md:text-3xl font-bold text-blue-400" id="newClientsThisMonth">0</p>
-                            <p class="text-gray-300 text-xs md:text-sm">Novos Este Mês</p>
+                            <p class="text-gray-300 text-xs md:text-sm">4+ Estrelas</p>
                         </div>
                     </div>
                     <div class="bg-blue-500 h-1 rounded-full"></div>
-                    <p class="text-xs text-gray-400 mt-2 text-center md:text-left">Crescimento mensal</p>
+                    <p class="text-xs text-gray-400 mt-2 text-center md:text-left">Clientes bem avaliados</p>
                 </div>
             </div>
         </div>
@@ -457,20 +464,26 @@
                                 <span class="hidden sm:inline">🌟 </span>5 Estrelas
                             </button>
                             <button onclick="filterClients('4estrelas')" class="bg-green-600 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-green-700 transition-colors" id="filterClients4estrelas">
-                                <span class="hidden sm:inline">⭐ </span>4+ Estrelas
+                                <span class="hidden sm:inline">⭐ </span>4 Estrelas
                             </button>
-                            <button onclick="filterClients('novos')" class="bg-blue-600 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-blue-700 transition-colors" id="filterClientsNovos">
-                                <span class="hidden sm:inline">🆕 </span>Novos
+                            <button onclick="filterClients('3estrelas')" class="bg-blue-600 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-blue-700 transition-colors" id="filterClients3estrelas">
+                                <span class="hidden sm:inline">⭐ </span>3 Estrelas
+                            </button>
+                            <button onclick="filterClients('2estrelas')" class="bg-orange-600 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-orange-700 transition-colors" id="filterClients2estrelas">
+                                <span class="hidden sm:inline">⭐ </span>2 Estrelas
+                            </button>
+                            <button onclick="filterClients('1estrela')" class="bg-red-600 px-3 py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-red-700 transition-colors" id="filterClients1estrela">
+                                <span class="hidden sm:inline">⭐ </span>1 Estrela
                             </button>
                         </div>
                     </div>
                     
                     <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
                         <input type="text" id="searchClientInput" placeholder="🔍 Buscar clientes..." class="flex-1 px-3 py-2 md:px-4 md:py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
-                        <select id="sortClientSelect" class="px-3 py-2 md:px-4 md:py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
-                            <option value="nome">📝 Por Nome</option>
-                            <option value="rating">⭐ Por Avaliação</option>
-                            <option value="data">📅 Por Data</option>
+                        <select id="sortClientSelect" class="px-3 py-2 md:px-4 md:py-2 rounded-lg bg-gray-800 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                            <option value="nome" class="bg-gray-800 text-white">📝 Por Nome</option>
+                            <option value="rating" class="bg-gray-800 text-white">⭐ Por Avaliação</option>
+                            <option value="data" class="bg-gray-800 text-white">📅 Por Data</option>
                         </select>
                     </div>
                 </div>
@@ -532,27 +545,27 @@
                     
                     <div class="lg:col-span-2">
                         <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Descrição</label>
-                        <textarea id="projectDescription" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent h-24 md:h-32 resize-none text-sm md:text-base" placeholder="Descreva o projeto, objetivos e detalhes importantes..."></textarea>
+                        <textarea id="projectDescription" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent h-32 md:h-48 resize-y text-sm md:text-base" placeholder="Descreva detalhadamente o projeto, objetivos, escopo, requisitos técnicos, funcionalidades esperadas, cronograma de entregas, recursos necessários e outras informações importantes para o desenvolvimento..."></textarea>
                     </div>
                     
                     <div>
                         <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Status</label>
-                        <select id="projectStatus" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
-                            <option value="planejamento">📋 Planejamento</option>
-                            <option value="andamento">⚡ Em Andamento</option>
-                            <option value="concluido">✅ Concluído</option>
-                            <option value="pausado">⏸️ Pausado</option>
-                            <option value="cancelado">❌ Cancelado</option>
+                        <select id="projectStatus" class="w-full p-3 md:p-4 rounded-lg bg-gray-800 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                            <option value="planejamento" class="bg-gray-800 text-white">📋 Planejamento</option>
+                            <option value="andamento" class="bg-gray-800 text-white">⚡ Em Andamento</option>
+                            <option value="concluido" class="bg-gray-800 text-white">✅ Concluído</option>
+                            <option value="pausado" class="bg-gray-800 text-white">⏸️ Pausado</option>
+                            <option value="cancelado" class="bg-gray-800 text-white">❌ Cancelado</option>
                         </select>
                     </div>
                     
                     <div>
                         <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Prioridade</label>
-                        <select id="projectPriority" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
-                            <option value="baixa">🟢 Baixa</option>
-                            <option value="media">🟡 Média</option>
-                            <option value="alta">🟠 Alta</option>
-                            <option value="critica">🔴 Crítica</option>
+                        <select id="projectPriority" class="w-full p-3 md:p-4 rounded-lg bg-gray-800 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                            <option value="baixa" class="bg-gray-800 text-white">🟢 Baixa</option>
+                            <option value="media" class="bg-gray-800 text-white">🟡 Média</option>
+                            <option value="alta" class="bg-gray-800 text-white">🟠 Alta</option>
+                            <option value="critica" class="bg-gray-800 text-white">🔴 Crítica</option>
                         </select>
                     </div>
                     
@@ -637,6 +650,26 @@
                             <span id="ratingText" class="text-gray-400 text-sm">Clique nas estrelas para avaliar</span>
                         </div>
                         <input type="hidden" id="clientRatingValue" value="0">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Valor do Projeto (R$)</label>
+                        <input type="number" id="clientProjectValue" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base" placeholder="0,00" step="0.01">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Valor Pago (R$)</label>
+                        <input type="number" id="clientPaidValue" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base" placeholder="0,00" step="0.01">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Data de Início do Projeto</label>
+                        <input type="date" id="clientProjectStart" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Data de Entrega</label>
+                        <input type="date" id="clientProjectEnd" class="w-full p-3 md:p-4 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
                     </div>
                     
                     <div class="lg:col-span-2">
@@ -829,6 +862,360 @@
         </div>
     </div>
 
+    <!-- Partial Payment Modal -->
+    <div id="partialPaymentModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
+        <div class="glass-effect p-6 md:p-8 rounded-xl max-w-md w-full slide-up">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 gradient-green-purple rounded-lg flex items-center justify-center">
+                        <span class="text-xl">💰</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gradient">Pagamento Parcial</h3>
+                </div>
+                <button onclick="hidePartialPaymentModal()" class="text-gray-400 hover:text-white text-2xl transition-colors p-1">&times;</button>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- Client Info -->
+                <div class="bg-white/5 p-4 rounded-lg">
+                    <h4 id="partialPaymentClientName" class="font-semibold text-lg mb-2">Nome do Cliente</h4>
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                            <span class="text-gray-400">Valor Total:</span>
+                            <p id="partialPaymentTotal" class="font-semibold text-blue-400">R$ 0,00</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-400">Já Pago:</span>
+                            <p id="partialPaymentPaid" class="font-semibold text-green-400">R$ 0,00</p>
+                        </div>
+                        <div class="col-span-2">
+                            <span class="text-gray-400">Valor Restante:</span>
+                            <p id="partialPaymentRemaining" class="font-semibold text-red-400 text-lg">R$ 0,00</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Form -->
+                <form id="partialPaymentForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-gray-300">Valor do Pagamento *</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">R$</span>
+                            <input type="number" id="partialPaymentAmount" class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg font-semibold" placeholder="0,00" step="0.01" min="0.01" required>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1">Digite o valor que o cliente pagou</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-gray-300">Observações (opcional)</label>
+                        <textarea id="partialPaymentNotes" class="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent h-20 resize-none text-sm" placeholder="Ex: Pagamento via PIX, parcela 1/3, etc..."></textarea>
+                    </div>
+                    
+                    <!-- Quick Amount Buttons -->
+                    <div class="space-y-2">
+                        <p class="text-sm text-gray-400">Valores Rápidos:</p>
+                        <div class="grid grid-cols-3 gap-2" id="quickAmountButtons">
+                            <!-- Quick buttons will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Preview -->
+                    <div class="bg-blue-500/10 border border-blue-500/30 p-3 rounded-lg">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-blue-400">📊</span>
+                            <span class="text-blue-400 font-semibold text-sm">Prévia do Pagamento</span>
+                        </div>
+                        <div class="text-xs text-gray-300 space-y-1">
+                            <div class="flex justify-between">
+                                <span>Novo valor pago:</span>
+                                <span id="previewNewPaid" class="font-semibold">R$ 0,00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Novo valor restante:</span>
+                                <span id="previewNewRemaining" class="font-semibold">R$ 0,00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Progresso:</span>
+                                <span id="previewProgress" class="font-semibold">0%</span>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div id="previewProgressBar" class="bg-gradient-to-r from-purple-500 to-green-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3 pt-4">
+                        <button type="submit" class="flex-1 gradient-green-purple py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
+                            💾 Confirmar Pagamento
+                        </button>
+                        <button type="button" onclick="hidePartialPaymentModal()" class="flex-1 bg-gray-600 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors">
+                            ❌ Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Details Modal -->
+    <div id="projectDetailsModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-2 md:p-4">
+        <div class="glass-effect p-4 md:p-8 rounded-xl max-w-4xl w-full slide-up max-h-[95vh] md:max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4 md:mb-6">
+                <div class="flex items-center space-x-2 md:space-x-3">
+                    <div class="w-8 h-8 md:w-10 md:h-10 gradient-green-purple rounded-lg flex items-center justify-center">
+                        <span class="text-lg md:text-xl">📊</span>
+                    </div>
+                    <h3 id="projectDetailsTitle" class="text-base md:text-2xl font-bold text-gradient">Detalhes do Projeto</h3>
+                </div>
+                <button onclick="hideProjectDetailsModal()" class="text-gray-400 hover:text-white text-2xl md:text-3xl transition-colors p-1">&times;</button>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                <!-- Project Info -->
+                <div class="glass-effect p-4 md:p-6 rounded-xl">
+                    <h4 class="text-lg font-bold text-gradient mb-4 flex items-center gap-2">
+                        📋 Informações do Projeto
+                    </h4>
+                    <div id="projectDetailsInfo" class="space-y-3">
+                        <!-- Project info will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Project Progress -->
+                <div class="glass-effect p-4 md:p-6 rounded-xl">
+                    <h4 class="text-lg font-bold text-gradient mb-4 flex items-center gap-2">
+                        📈 Progresso do Projeto
+                    </h4>
+                    <div class="space-y-4">
+                        <div class="text-center">
+                            <div class="w-32 h-32 mx-auto mb-4">
+                                <canvas id="projectProgressChart"></canvas>
+                            </div>
+                            <div id="projectProgressStatus" class="text-sm text-gray-300">
+                                <!-- Progress status will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Status:</span>
+                                <span id="projectCurrentStatus" class="font-semibold">-</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Prioridade:</span>
+                                <span id="projectCurrentPriority" class="font-semibold">-</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Progresso Temporal:</span>
+                                <span id="projectTimeProgress" class="font-semibold">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Financial Info -->
+                <div class="glass-effect p-4 md:p-6 rounded-xl">
+                    <h4 class="text-lg font-bold text-gradient mb-4 flex items-center gap-2">
+                        💰 Informações Financeiras
+                    </h4>
+                    <div class="space-y-4">
+                        <div class="text-center">
+                            <div class="w-32 h-32 mx-auto mb-4">
+                                <canvas id="projectBudgetChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Orçamento Total:</span>
+                                <span id="projectBudgetTotal" class="font-semibold">R$ 0,00</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Valor Recebido:</span>
+                                <span id="projectBudgetReceived" class="font-semibold text-green-400">R$ 0,00</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Valor Pendente:</span>
+                                <span id="projectBudgetPending" class="font-semibold text-red-400">R$ 0,00</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Actions -->
+                        <div class="grid grid-cols-2 gap-2 mt-4">
+                            <button onclick="updateProjectPayment('paid')" class="bg-green-600 px-3 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors text-xs">
+                                ✅ Marcar Pago
+                            </button>
+                            <button onclick="updateProjectPayment('partial')" class="bg-yellow-600 px-3 py-2 rounded-lg font-semibold hover:bg-yellow-700 transition-colors text-xs">
+                                ⚡ Pag. Parcial
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Timeline -->
+                <div class="glass-effect p-4 md:p-6 rounded-xl">
+                    <h4 class="text-lg font-bold text-gradient mb-4 flex items-center gap-2">
+                        📅 Timeline do Projeto
+                    </h4>
+                    <div class="space-y-4">
+                        <div class="w-full h-32">
+                            <canvas id="projectTimelineChart"></canvas>
+                        </div>
+                        <div id="projectTimelineInfo" class="space-y-2 text-sm">
+                            <!-- Timeline info will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Status Actions -->
+                <div class="glass-effect p-4 md:p-6 rounded-xl lg:col-span-2">
+                    <h4 class="text-lg font-bold text-gradient mb-4 flex items-center gap-2">
+                        🎯 Ações do Projeto
+                    </h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <button onclick="updateProjectStatus('planejamento')" class="bg-blue-600 px-4 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-sm">
+                            📋 Planejamento
+                        </button>
+                        <button onclick="updateProjectStatus('andamento')" class="bg-yellow-600 px-4 py-3 rounded-lg font-semibold hover:bg-yellow-700 transition-colors text-sm">
+                            ⚡ Em Andamento
+                        </button>
+                        <button onclick="updateProjectStatus('concluido')" class="bg-green-600 px-4 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors text-sm">
+                            ✅ Concluído
+                        </button>
+                        <button onclick="updateProjectStatus('pausado')" class="bg-gray-600 px-4 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors text-sm">
+                            ⏸️ Pausado
+                        </button>
+                        <button onclick="updateProjectStatus('cancelado')" class="bg-red-600 px-4 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors text-sm">
+                            ❌ Cancelado
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 md:gap-4 pt-4 md:pt-6">
+                <button onclick="editProject(currentProjectId)" class="flex-1 bg-purple-600 py-3 md:py-4 rounded-lg font-semibold hover:bg-purple-700 transition-colors text-sm md:text-lg">
+                    ✏️ Editar Projeto
+                </button>
+                <button onclick="hideProjectDetailsModal()" class="flex-1 bg-gray-600 py-3 md:py-4 rounded-lg font-semibold hover:bg-gray-700 transition-colors text-sm md:text-lg">
+                    ✖️ Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Details Modal -->
+    <div id="clientDetailsModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-2 md:p-4">
+        <div class="glass-effect p-4 md:p-8 rounded-xl max-w-4xl w-full slide-up max-h-[95vh] md:max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4 md:mb-6">
+                <div class="flex items-center space-x-2 md:space-x-3">
+                    <div class="w-8 h-8 md:w-10 md:h-10 gradient-green-purple rounded-lg flex items-center justify-center">
+                        <span class="text-lg md:text-xl">👤</span>
+                    </div>
+                    <h3 id="clientDetailsTitle" class="text-base md:text-2xl font-bold text-gradient">Detalhes do Cliente</h3>
+                </div>
+                <button onclick="hideClientDetailsModal()" class="text-gray-400 hover:text-white text-2xl md:text-3xl transition-colors p-1">&times;</button>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                <!-- Client Info -->
+                <div class="glass-effect p-4 md:p-6 rounded-xl">
+                    <h4 class="text-lg font-bold text-gradient mb-4 flex items-center gap-2">
+                        📋 Informações do Cliente
+                    </h4>
+                    <div id="clientDetailsInfo" class="space-y-3">
+                        <!-- Client info will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Payment Progress -->
+                <div class="glass-effect p-4 md:p-6 rounded-xl">
+                    <h4 class="text-lg font-bold text-gradient mb-4 flex items-center gap-2">
+                        💰 Status de Pagamento
+                    </h4>
+                    <div class="space-y-4">
+                        <div class="text-center">
+                            <div class="w-32 h-32 mx-auto mb-4">
+                                <canvas id="paymentChart"></canvas>
+                            </div>
+                            <div id="paymentStatus" class="text-sm text-gray-300">
+                                <!-- Payment status will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Valor Total:</span>
+                                <span id="totalValue" class="font-semibold">R$ 0,00</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Valor Pago:</span>
+                                <span id="paidValue" class="font-semibold text-green-400">R$ 0,00</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Valor Restante:</span>
+                                <span id="remainingValue" class="font-semibold text-red-400">R$ 0,00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project Progress -->
+                <div class="glass-effect p-4 md:p-6 rounded-xl lg:col-span-2">
+                    <h4 class="text-lg font-bold text-gradient mb-4 flex items-center gap-2">
+                        📈 Progresso do Projeto
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <div class="w-full h-32">
+                                <canvas id="progressChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div id="projectTimeline" class="text-sm text-gray-300">
+                                <!-- Timeline info will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Actions -->
+                <div class="glass-effect p-4 md:p-6 rounded-xl lg:col-span-2">
+                    <h4 class="text-lg font-bold text-gradient mb-4 flex items-center gap-2">
+                        💳 Ações de Pagamento
+                    </h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <button onclick="updatePaymentStatus('paid')" class="bg-green-600 px-4 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors text-sm">
+                            ✅ Marcar como Pago
+                        </button>
+                        <button onclick="updatePaymentStatus('partial')" class="bg-yellow-600 px-4 py-3 rounded-lg font-semibold hover:bg-yellow-700 transition-colors text-sm">
+                            ⚡ Pagamento Parcial
+                        </button>
+                        <button onclick="updatePaymentStatus('pending')" class="bg-red-600 px-4 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors text-sm">
+                            ⏳ Marcar como Pendente
+                        </button>
+                    </div>
+                    
+                    <div class="mt-4 hidden" id="partialPaymentForm">
+                        <div class="flex gap-3">
+                            <input type="number" id="partialAmount" placeholder="Valor do pagamento parcial" class="flex-1 p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" step="0.01">
+                            <button onclick="applyPartialPayment()" class="bg-blue-600 px-4 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-sm">
+                                💾 Aplicar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 md:gap-4 pt-4 md:pt-6">
+                <button onclick="hideClientDetailsModal()" class="flex-1 bg-gray-600 py-3 md:py-4 rounded-lg font-semibold hover:bg-gray-700 transition-colors text-sm md:text-lg">
+                    ✖️ Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Confirmation Modal -->
     <div id="deleteModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
         <div class="glass-effect p-4 md:p-8 rounded-xl max-w-md w-full slide-up">
@@ -1012,12 +1399,13 @@
 
         function getStarDisplay(rating) {
             let stars = '';
-            for (let i = 1; i <= 5; i++) {
-                if (i <= rating) {
-                    stars += '<span class="text-yellow-400">⭐</span>';
-                } else {
-                    stars += '<span class="text-gray-600">⭐</span>';
-                }
+            // Mostrar apenas o número de estrelas correspondente à avaliação
+            for (let i = 1; i <= rating; i++) {
+                stars += '<span class="text-yellow-400">⭐</span>';
+            }
+            // Se não há avaliação, mostrar texto
+            if (rating === 0) {
+                stars = '<span class="text-gray-500 text-xs">Sem avaliação</span>';
             }
             return stars;
         }
@@ -1028,18 +1416,12 @@
             const ratings = clients.map(c => c.rating || 0).filter(r => r > 0);
             const averageRating = ratings.length > 0 ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : '0.0';
             const fiveStarClients = clients.filter(c => c.rating === 5).length;
-            
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
-            const newThisMonth = clients.filter(c => {
-                const createdDate = new Date(c.createdAt);
-                return createdDate.getMonth() === currentMonth && createdDate.getFullYear() === currentYear;
-            }).length;
+            const fourPlusStarClients = clients.filter(c => c.rating >= 4).length;
 
             document.getElementById('totalClients').textContent = total;
             document.getElementById('averageRating').textContent = averageRating;
             document.getElementById('fiveStarClients').textContent = fiveStarClients;
-            document.getElementById('newClientsThisMonth').textContent = newThisMonth;
+            document.getElementById('newClientsThisMonth').textContent = fourPlusStarClients;
         }
 
         function filterClients(filter) {
@@ -1059,8 +1441,12 @@
                 activeBtn = document.getElementById('filterClients5estrelas');
             } else if (filter === '4estrelas') {
                 activeBtn = document.getElementById('filterClients4estrelas');
-            } else if (filter === 'novos') {
-                activeBtn = document.getElementById('filterClientsNovos');
+            } else if (filter === '3estrelas') {
+                activeBtn = document.getElementById('filterClients3estrelas');
+            } else if (filter === '2estrelas') {
+                activeBtn = document.getElementById('filterClients2estrelas');
+            } else if (filter === '1estrela') {
+                activeBtn = document.getElementById('filterClients1estrela');
             }
             
             if (activeBtn) {
@@ -1076,14 +1462,13 @@
             if (currentClientFilter === '5estrelas') {
                 filtered = filtered.filter(c => c.rating === 5);
             } else if (currentClientFilter === '4estrelas') {
-                filtered = filtered.filter(c => c.rating >= 4);
-            } else if (currentClientFilter === 'novos') {
-                const currentMonth = new Date().getMonth();
-                const currentYear = new Date().getFullYear();
-                filtered = filtered.filter(c => {
-                    const createdDate = new Date(c.createdAt);
-                    return createdDate.getMonth() === currentMonth && createdDate.getFullYear() === currentYear;
-                });
+                filtered = filtered.filter(c => c.rating === 4);
+            } else if (currentClientFilter === '3estrelas') {
+                filtered = filtered.filter(c => c.rating === 3);
+            } else if (currentClientFilter === '2estrelas') {
+                filtered = filtered.filter(c => c.rating === 2);
+            } else if (currentClientFilter === '1estrela') {
+                filtered = filtered.filter(c => c.rating === 1);
             }
             
             // Apply search filter
@@ -1113,6 +1498,25 @@
             return filtered;
         }
 
+        function getPaymentStatus(client) {
+            const projectValue = client.projectValue || 0;
+            const paidValue = client.paidValue || 0;
+            
+            if (projectValue === 0) {
+                return { status: 'no-value', text: 'Valor não definido', color: 'bg-gray-500', percentage: 0 };
+            }
+            
+            const percentage = Math.round((paidValue / projectValue) * 100);
+            
+            if (percentage >= 100) {
+                return { status: 'paid', text: 'Pago', color: 'bg-green-500', percentage: 100 };
+            } else if (percentage > 0) {
+                return { status: 'partial', text: `${percentage}% Pago`, color: 'bg-yellow-500', percentage };
+            } else {
+                return { status: 'pending', text: 'Pendente', color: 'bg-red-500', percentage: 0 };
+            }
+        }
+
         function renderClients() {
             const clientsList = document.getElementById('clientsList');
             const emptyState = document.getElementById('emptyClientState');
@@ -1129,25 +1533,50 @@
 
             emptyState.style.display = 'none';
             
-            clientsList.innerHTML = filteredClients.map(client => {
-                const createdDate = new Date(client.createdAt);
-                const isNew = (Date.now() - createdDate.getTime()) < (30 * 24 * 60 * 60 * 1000); // 30 days
+            clientsList.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    ${filteredClients.map(client => {
+                        const createdDate = new Date(client.createdAt);
+                        const isNew = (Date.now() - createdDate.getTime()) < (30 * 24 * 60 * 60 * 1000); // 30 days
+                        const paymentStatus = getPaymentStatus(client);
 
-                return `
-                    <div class="glass-effect p-4 md:p-6 rounded-xl card-hover fade-in">
-                        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-4 space-y-4 lg:space-y-0">
-                            <div class="flex-1">
-                                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
-                                    <h3 class="text-lg md:text-xl font-bold text-gradient">${client.name}</h3>
-                                    <div class="flex flex-wrap gap-2 items-center">
-                                        <div class="flex items-center">
-                                            ${getStarDisplay(client.rating || 0)}
+                        return `
+                            <div class="glass-effect p-4 rounded-xl card-hover fade-in">
+                                <!-- Header com Nome e Status -->
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="text-lg font-bold text-gradient truncate">${client.name}</h3>
+                                        <div class="flex flex-wrap gap-1 mt-1">
+                                            <div class="flex items-center">
+                                                ${getStarDisplay(client.rating || 0)}
+                                            </div>
+                                            ${isNew ? '<span class="px-2 py-1 bg-blue-600 text-white text-xs rounded-full">NOVO</span>' : ''}
                                         </div>
-                                        ${isNew ? '<span class="px-2 py-1 bg-blue-600 text-white text-xs rounded-full">NOVO</span>' : ''}
+                                    </div>
+                                    
+                                    <!-- Ações Rápidas -->
+                                    <div class="flex gap-1 ml-2">
+                                        <button onclick="showClientDetails('${client.id}')" class="w-8 h-8 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center text-white transition-colors" title="Ver Detalhes">
+                                            📊
+                                        </button>
+                                        <button onclick="editClient('${client.id}')" class="w-8 h-8 bg-purple-600 hover:bg-purple-700 rounded-lg flex items-center justify-center text-white transition-colors" title="Editar Cliente">
+                                            ✏️
+                                        </button>
+                                        <button onclick="showDeleteModal('${client.id}', 'client')" class="w-8 h-8 bg-red-600 hover:bg-red-700 rounded-lg flex items-center justify-center text-white transition-colors" title="Excluir Cliente">
+                                            🗑️
+                                        </button>
                                     </div>
                                 </div>
                                 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm mb-4">
+                                <!-- Status de Pagamento -->
+                                <div class="mb-3">
+                                    <span class="px-3 py-1 ${paymentStatus.color} text-white text-xs rounded-full font-semibold">
+                                        💰 ${paymentStatus.text}
+                                    </span>
+                                </div>
+                                
+                                <!-- Informações de Contato -->
+                                <div class="space-y-2 text-sm mb-4">
                                     <div class="flex items-center gap-2 text-gray-300">
                                         <span>📞</span>
                                         <span class="truncate">${client.phone}</span>
@@ -1160,36 +1589,68 @@
                                         </div>
                                     ` : ''}
                                     
-                                    <div class="flex items-start gap-2 text-gray-300 sm:col-span-2">
+                                    <div class="flex items-start gap-2 text-gray-300">
                                         <span>📍</span>
-                                        <span class="text-sm leading-relaxed">${client.address}</span>
-                                    </div>
-                                    
-                                    <div class="flex items-center gap-2 text-gray-400 text-xs">
-                                        <span>📅</span>
-                                        <span>Cadastrado em ${createdDate.toLocaleDateString('pt-BR')}</span>
+                                        <span class="text-sm leading-relaxed line-clamp-2">${client.address}</span>
                                     </div>
                                 </div>
                                 
-                                ${client.notes ? `
+                                <!-- Valores do Projeto -->
+                                ${client.projectValue ? `
                                     <div class="bg-white/5 p-3 rounded-lg mb-3">
-                                        <p class="text-xs md:text-sm text-gray-300 leading-relaxed">${client.notes}</p>
+                                        <div class="grid grid-cols-2 gap-2 text-xs">
+                                            <div>
+                                                <span class="text-gray-400">Total:</span>
+                                                <p class="font-semibold text-blue-400">${formatCurrency(client.projectValue)}</p>
+                                            </div>
+                                            <div>
+                                                <span class="text-gray-400">Pago:</span>
+                                                <p class="font-semibold text-green-400">${formatCurrency(client.paidValue || 0)}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Barra de Progresso -->
+                                        <div class="mt-2">
+                                            <div class="flex justify-between text-xs text-gray-400 mb-1">
+                                                <span>Progresso</span>
+                                                <span>${paymentStatus.percentage}%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                                <div class="${paymentStatus.color} h-2 rounded-full transition-all duration-300" style="width: ${paymentStatus.percentage}%"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 ` : ''}
+                                
+                                ${client.notes ? `
+                                    <div class="bg-white/5 p-2 rounded-lg mb-3">
+                                        <p class="text-xs text-gray-300 leading-relaxed line-clamp-2">${client.notes}</p>
+                                    </div>
+                                ` : ''}
+                                
+                                <!-- Ações de Pagamento -->
+                                <div class="flex justify-between items-center pt-2 border-t border-gray-600">
+                                    <div class="text-xs text-gray-400">
+                                        📅 ${createdDate.toLocaleDateString('pt-BR')}
+                                    </div>
+                                    
+                                    <div class="flex gap-1">
+                                        <button onclick="quickPaymentUpdate('${client.id}', 'paid')" class="w-7 h-7 bg-green-600 hover:bg-green-700 rounded-md flex items-center justify-center text-white transition-colors text-sm" title="Marcar como Pago">
+                                            ✅
+                                        </button>
+                                        <button onclick="quickPaymentUpdate('${client.id}', 'partial')" class="w-7 h-7 bg-yellow-600 hover:bg-yellow-700 rounded-md flex items-center justify-center text-white transition-colors text-sm" title="Pagamento Parcial">
+                                            ⚡
+                                        </button>
+                                        <button onclick="quickPaymentUpdate('${client.id}', 'pending')" class="w-7 h-7 bg-red-600 hover:bg-red-700 rounded-md flex items-center justify-center text-white transition-colors text-sm" title="Marcar como Pendente">
+                                            ⏳
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            
-                            <div class="flex flex-col sm:flex-row gap-2 lg:ml-6 w-full sm:w-auto">
-                                <button onclick="editClient('${client.id}')" class="gradient-purple-green px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold hover:opacity-90 transition-opacity">
-                                    ✏️ <span class="hidden sm:inline">Editar</span>
-                                </button>
-                                <button onclick="showDeleteModal('${client.id}', 'client')" class="bg-red-600 px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-red-700 transition-colors">
-                                    🗑️ <span class="hidden sm:inline">Excluir</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                        `;
+                    }).join('')}
+                </div>
+            `;
         }
 
         function showAddClientModal() {
@@ -1217,6 +1678,10 @@
             document.getElementById('clientPhone').value = client.phone;
             document.getElementById('clientEmail').value = client.email || '';
             document.getElementById('clientAddress').value = client.address;
+            document.getElementById('clientProjectValue').value = client.projectValue || '';
+            document.getElementById('clientPaidValue').value = client.paidValue || '';
+            document.getElementById('clientProjectStart').value = client.projectStart || '';
+            document.getElementById('clientProjectEnd').value = client.projectEnd || '';
             document.getElementById('clientNotes').value = client.notes || '';
             document.getElementById('clientRatingValue').value = client.rating || 0;
             
@@ -1640,55 +2105,78 @@
 
             emptyState.style.display = 'none';
             
-            projectsList.innerHTML = filteredProjects.map(project => {
-                const statusInfo = getStatusInfo(project.status);
-                const priorityInfo = getPriorityInfo(project.priority || 'media');
-                const overdue = isOverdue(project.deadline, project.status);
-                const daysUntil = getDaysUntilDeadline(project.deadline);
-                
-                let deadlineText = formatDate(project.deadline);
-                let deadlineClass = 'text-gray-400';
-                
-                if (daysUntil !== null) {
-                    if (daysUntil < 0) {
-                        deadlineText += ` (${Math.abs(daysUntil)} dias atrasado)`;
-                        deadlineClass = 'text-red-400 pulse-alert';
-                    } else if (daysUntil === 0) {
-                        deadlineText += ' (Hoje!)';
-                        deadlineClass = 'text-yellow-400 pulse-alert';
-                    } else if (daysUntil <= 3) {
-                        deadlineText += ` (${daysUntil} dias restantes)`;
-                        deadlineClass = 'text-orange-400';
-                    } else if (daysUntil <= 7) {
-                        deadlineText += ` (${daysUntil} dias restantes)`;
-                        deadlineClass = 'text-yellow-400';
-                    }
-                }
+            projectsList.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    ${filteredProjects.map(project => {
+                        const statusInfo = getStatusInfo(project.status);
+                        const priorityInfo = getPriorityInfo(project.priority || 'media');
+                        const overdue = isOverdue(project.deadline, project.status);
+                        const daysUntil = getDaysUntilDeadline(project.deadline);
+                        
+                        let deadlineText = formatDate(project.deadline);
+                        let deadlineClass = 'text-gray-400';
+                        
+                        if (daysUntil !== null) {
+                            if (daysUntil < 0) {
+                                deadlineText += ` (${Math.abs(daysUntil)} dias atrasado)`;
+                                deadlineClass = 'text-red-400 pulse-alert';
+                            } else if (daysUntil === 0) {
+                                deadlineText += ' (Hoje!)';
+                                deadlineClass = 'text-yellow-400 pulse-alert';
+                            } else if (daysUntil <= 3) {
+                                deadlineText += ` (${daysUntil} dias restantes)`;
+                                deadlineClass = 'text-orange-400';
+                            } else if (daysUntil <= 7) {
+                                deadlineText += ` (${daysUntil} dias restantes)`;
+                                deadlineClass = 'text-yellow-400';
+                            }
+                        }
 
-                return `
-                    <div class="glass-effect p-4 md:p-6 rounded-xl card-hover fade-in ${overdue ? 'border-red-500 border-2' : ''}">
-                        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-4 space-y-4 lg:space-y-0">
-                            <div class="flex-1">
-                                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
-                                    <h3 class="text-lg md:text-xl font-bold text-gradient">${project.name}</h3>
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="px-2 py-1 md:px-3 md:py-1 rounded-full text-xs font-semibold ${priorityInfo.color} text-white">
-                                            ${priorityInfo.text}
-                                        </span>
-                                        ${overdue ? '<span class="px-2 py-1 bg-red-600 text-white text-xs rounded-full pulse-alert">ATRASADO</span>' : ''}
+                        return `
+                            <div class="glass-effect p-4 rounded-xl card-hover fade-in ${overdue ? 'border-red-500 border-2' : ''}">
+                                <!-- Header com Nome e Status -->
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="text-lg font-bold text-gradient truncate">${project.name}</h3>
+                                        <div class="flex flex-wrap gap-1 mt-1">
+                                            <span class="px-2 py-1 ${priorityInfo.color} text-white text-xs rounded-full font-semibold">
+                                                ${priorityInfo.text}
+                                            </span>
+                                            ${overdue ? '<span class="px-2 py-1 bg-red-600 text-white text-xs rounded-full pulse-alert">ATRASADO</span>' : ''}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Ações Rápidas -->
+                                    <div class="flex gap-1 ml-2">
+                                        <button onclick="showProjectDetails('${project.id}')" class="w-8 h-8 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center text-white transition-colors" title="Ver Detalhes">
+                                            📊
+                                        </button>
+                                        <button onclick="editProject('${project.id}')" class="w-8 h-8 bg-purple-600 hover:bg-purple-700 rounded-lg flex items-center justify-center text-white transition-colors" title="Editar Projeto">
+                                            ✏️
+                                        </button>
+                                        <button onclick="showDeleteModal('${project.id}', 'project')" class="w-8 h-8 bg-red-600 hover:bg-red-700 rounded-lg flex items-center justify-center text-white transition-colors" title="Excluir Projeto">
+                                            🗑️
+                                        </button>
                                     </div>
                                 </div>
                                 
-                                ${project.description ? `<p class="text-gray-300 mb-4 leading-relaxed text-sm md:text-base">${project.description}</p>` : ''}
+                                <!-- Status do Projeto -->
+                                <div class="mb-3">
+                                    <span class="px-3 py-1 ${statusInfo.color} text-white text-xs rounded-full font-semibold">
+                                        ${statusInfo.text}
+                                    </span>
+                                </div>
                                 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 text-xs md:text-sm mb-4">
-                                    <div class="flex items-center gap-2">
-                                        <span class="px-2 py-1 md:px-3 md:py-1 rounded-full ${statusInfo.color} text-white font-medium text-xs">
-                                            ${statusInfo.text}
-                                        </span>
+                                <!-- Descrição -->
+                                ${project.description ? `
+                                    <div class="mb-3">
+                                        <p class="text-gray-300 text-sm leading-relaxed line-clamp-2">${project.description}</p>
                                     </div>
-                                    
-                                    <div class="flex items-center gap-2 text-gray-400">
+                                ` : ''}
+                                
+                                <!-- Informações do Projeto -->
+                                <div class="space-y-2 text-sm mb-4">
+                                    <div class="flex items-center gap-2 text-gray-300">
                                         <span>🗓️</span>
                                         <span class="truncate">Início: ${formatDate(project.startDate)}</span>
                                     </div>
@@ -1698,32 +2186,35 @@
                                         <span class="truncate">Entrega: ${deadlineText}</span>
                                     </div>
                                     
-                                    <div class="flex items-center gap-2 text-gray-400">
+                                    <div class="flex items-center gap-2 text-gray-300">
                                         <span>💰</span>
                                         <span class="truncate">${formatCurrency(project.budget)}</span>
                                     </div>
+                                    
+                                    ${project.client ? `
+                                        <div class="flex items-center gap-2 text-gray-300">
+                                            <span>👤</span>
+                                            <span class="truncate">Cliente: ${project.client}</span>
+                                        </div>
+                                    ` : ''}
                                 </div>
                                 
-                                ${project.client ? `
-                                    <div class="flex items-center gap-2 text-xs md:text-sm text-gray-400 mb-2">
-                                        <span>👤</span>
-                                        <span class="truncate">Cliente: ${project.client}</span>
+                                <!-- Rodapé com Data de Criação -->
+                                <div class="flex justify-between items-center pt-2 border-t border-gray-600">
+                                    <div class="text-xs text-gray-400">
+                                        📅 ${new Date(project.createdAt).toLocaleDateString('pt-BR')}
                                     </div>
-                                ` : ''}
+                                    
+                                    <div class="flex gap-1">
+                                        <div class="w-2 h-2 rounded-full ${statusInfo.color}"></div>
+                                        <div class="w-2 h-2 rounded-full ${priorityInfo.color}"></div>
+                                    </div>
+                                </div>
                             </div>
-                            
-                            <div class="flex flex-col sm:flex-row gap-2 lg:ml-6 w-full sm:w-auto">
-                                <button onclick="editProject('${project.id}')" class="gradient-purple-green px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold hover:opacity-90 transition-opacity">
-                                    ✏️ <span class="hidden sm:inline">Editar</span>
-                                </button>
-                                <button onclick="showDeleteModal('${project.id}', 'project')" class="bg-red-600 px-3 py-2 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-red-700 transition-colors">
-                                    🗑️ <span class="hidden sm:inline">Excluir</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                        `;
+                    }).join('')}
+                </div>
+            `;
         }
 
         function showAddModal() {
@@ -2334,6 +2825,980 @@
             hideBackupModal();
         }
 
+        // Client Details and Payment Functions
+        let currentClientId = null;
+        let paymentChart = null;
+        let progressChart = null;
+
+        // Project Details Functions
+        let currentProjectId = null;
+        let projectProgressChart = null;
+        let projectBudgetChart = null;
+        let projectTimelineChart = null;
+
+        function showProjectDetails(id) {
+            const project = projects.find(p => p.id === id);
+            if (!project) return;
+
+            currentProjectId = id;
+            document.getElementById('projectDetailsTitle').textContent = `Detalhes - ${project.name}`;
+            
+            // Populate project info
+            const projectInfo = document.getElementById('projectDetailsInfo');
+            const statusInfo = getStatusInfo(project.status);
+            const priorityInfo = getPriorityInfo(project.priority || 'media');
+            
+            projectInfo.innerHTML = `
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Nome:</span>
+                        <span class="font-semibold">${project.name}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Status:</span>
+                        <span class="${statusInfo.textColor}">${statusInfo.text}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Prioridade:</span>
+                        <span class="font-semibold">${priorityInfo.text}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Cliente:</span>
+                        <span>${project.client || 'Não definido'}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Orçamento:</span>
+                        <span class="font-semibold text-green-400">${formatCurrency(project.budget)}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Data de Início:</span>
+                        <span>${formatDate(project.startDate)}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Data de Entrega:</span>
+                        <span>${formatDate(project.deadline)}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Criado em:</span>
+                        <span>${new Date(project.createdAt).toLocaleDateString('pt-BR')}</span>
+                    </div>
+                    ${project.description ? `
+                        <div class="pt-2 border-t border-gray-600">
+                            <span class="text-gray-400">Descrição:</span>
+                            <p class="mt-1 text-sm break-words whitespace-pre-wrap leading-relaxed">${project.description}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            // Update financial values
+            const budget = project.budget || 0;
+            const received = project.receivedValue || 0;
+            const pending = budget - received;
+
+            document.getElementById('projectBudgetTotal').textContent = formatCurrency(budget);
+            document.getElementById('projectBudgetReceived').textContent = formatCurrency(received);
+            document.getElementById('projectBudgetPending').textContent = formatCurrency(pending);
+
+            // Update status info
+            document.getElementById('projectCurrentStatus').innerHTML = `<span class="${statusInfo.textColor}">${statusInfo.text}</span>`;
+            document.getElementById('projectCurrentPriority').innerHTML = `<span class="font-semibold">${priorityInfo.text}</span>`;
+
+            // Update timeline info
+            updateProjectTimelineInfo(project);
+
+            // Show modal
+            document.getElementById('projectDetailsModal').classList.remove('hidden');
+            document.getElementById('projectDetailsModal').classList.add('flex');
+
+            // Initialize charts after modal is visible
+            setTimeout(() => {
+                initializeProjectCharts(project);
+            }, 100);
+        }
+
+        function hideProjectDetailsModal() {
+            document.getElementById('projectDetailsModal').classList.add('hidden');
+            document.getElementById('projectDetailsModal').classList.remove('flex');
+            
+            // Destroy charts
+            if (projectProgressChart) {
+                projectProgressChart.destroy();
+                projectProgressChart = null;
+            }
+            if (projectBudgetChart) {
+                projectBudgetChart.destroy();
+                projectBudgetChart = null;
+            }
+            if (projectTimelineChart) {
+                projectTimelineChart.destroy();
+                projectTimelineChart = null;
+            }
+            
+            currentProjectId = null;
+        }
+
+        function initializeProjectCharts(project) {
+            initializeProjectProgressChart(project);
+            initializeProjectBudgetChart(project);
+            initializeProjectTimelineChart(project);
+        }
+
+        function initializeProjectProgressChart(project) {
+            const ctx = document.getElementById('projectProgressChart').getContext('2d');
+            
+            if (projectProgressChart) {
+                projectProgressChart.destroy();
+            }
+
+            const progressData = calculateProjectTimeProgress(project);
+            const statusProgress = getStatusProgress(project.status);
+
+            projectProgressChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Concluído', 'Restante'],
+                    datasets: [{
+                        data: [statusProgress, 100 - statusProgress],
+                        backgroundColor: [
+                            statusProgress >= 100 ? 'rgba(34, 197, 94, 0.8)' : 
+                            statusProgress >= 75 ? 'rgba(245, 158, 11, 0.8)' : 
+                            statusProgress >= 50 ? 'rgba(249, 115, 22, 0.8)' : 
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(107, 114, 128, 0.3)'
+                        ],
+                        borderColor: [
+                            statusProgress >= 100 ? 'rgb(34, 197, 94)' : 
+                            statusProgress >= 75 ? 'rgb(245, 158, 11)' : 
+                            statusProgress >= 50 ? 'rgb(249, 115, 22)' : 
+                            'rgb(139, 92, 246)',
+                            'rgb(107, 114, 128)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+
+            // Update progress status text
+            document.getElementById('projectProgressStatus').innerHTML = `
+                <span class="font-semibold text-lg">${statusProgress}%</span><br>
+                <span class="text-xs text-gray-400">${getStatusProgressText(project.status)}</span>
+            `;
+        }
+
+        function initializeProjectBudgetChart(project) {
+            const ctx = document.getElementById('projectBudgetChart').getContext('2d');
+            const budget = project.budget || 0;
+            const received = project.receivedValue || 0;
+            const pending = Math.max(0, budget - received);
+
+            if (projectBudgetChart) {
+                projectBudgetChart.destroy();
+            }
+
+            projectBudgetChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Recebido', 'Pendente'],
+                    datasets: [{
+                        data: [received, pending],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(239, 68, 68, 0.3)'
+                        ],
+                        borderColor: [
+                            'rgb(34, 197, 94)',
+                            'rgb(239, 68, 68)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        function initializeProjectTimelineChart(project) {
+            const ctx = document.getElementById('projectTimelineChart').getContext('2d');
+            
+            if (projectTimelineChart) {
+                projectTimelineChart.destroy();
+            }
+
+            const timelineData = calculateProjectTimeProgress(project);
+
+            projectTimelineChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Progresso Temporal'],
+                    datasets: [{
+                        label: 'Progresso',
+                        data: [timelineData.percentage],
+                        backgroundColor: timelineData.percentage >= 100 ? 
+                            'rgba(239, 68, 68, 0.8)' : 
+                            timelineData.percentage >= 75 ? 
+                                'rgba(245, 158, 11, 0.8)' : 
+                                'rgba(34, 197, 94, 0.8)',
+                        borderColor: timelineData.percentage >= 100 ? 
+                            'rgb(239, 68, 68)' : 
+                            timelineData.percentage >= 75 ? 
+                                'rgb(245, 158, 11)' : 
+                                'rgb(34, 197, 94)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Update time progress text
+            document.getElementById('projectTimeProgress').textContent = `${timelineData.percentage}% - ${timelineData.status}`;
+        }
+
+        function calculateProjectTimeProgress(project) {
+            if (!project.startDate || !project.deadline) {
+                return { percentage: 0, status: 'Datas não definidas' };
+            }
+
+            const startDate = new Date(project.startDate);
+            const endDate = new Date(project.deadline);
+            const currentDate = new Date();
+
+            const totalDuration = endDate.getTime() - startDate.getTime();
+            const elapsedTime = currentDate.getTime() - startDate.getTime();
+
+            let percentage = Math.round((elapsedTime / totalDuration) * 100);
+            percentage = Math.max(0, Math.min(100, percentage));
+
+            let status = '';
+            if (currentDate < startDate) {
+                status = 'Não iniciado';
+                percentage = 0;
+            } else if (currentDate > endDate) {
+                status = 'Prazo vencido';
+                percentage = 100;
+            } else {
+                const daysRemaining = Math.ceil((endDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+                status = `${daysRemaining} dias restantes`;
+            }
+
+            return { percentage, status };
+        }
+
+        function getStatusProgress(status) {
+            const progressMap = {
+                'planejamento': 10,
+                'andamento': 50,
+                'concluido': 100,
+                'pausado': 25,
+                'cancelado': 0
+            };
+            return progressMap[status] || 0;
+        }
+
+        function getStatusProgressText(status) {
+            const textMap = {
+                'planejamento': 'Projeto em planejamento',
+                'andamento': 'Projeto em desenvolvimento',
+                'concluido': 'Projeto finalizado',
+                'pausado': 'Projeto pausado',
+                'cancelado': 'Projeto cancelado'
+            };
+            return textMap[status] || 'Status indefinido';
+        }
+
+        function updateProjectTimelineInfo(project) {
+            const timeline = document.getElementById('projectTimelineInfo');
+            const timeProgress = calculateProjectTimeProgress(project);
+
+            if (!project.startDate || !project.deadline) {
+                timeline.innerHTML = `
+                    <div class="text-center text-gray-400">
+                        <p>📅 Datas do projeto não definidas</p>
+                        <p class="text-xs mt-2">Configure as datas de início e fim do projeto</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const startDate = new Date(project.startDate);
+            const endDate = new Date(project.deadline);
+            const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+            const projectIsOverdue = isOverdue(project.deadline, project.status);
+
+            timeline.innerHTML = `
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Progresso Temporal:</span>
+                        <span class="font-semibold ${projectIsOverdue ? 'text-red-400' : 'text-green-400'}">${timeProgress.percentage}%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Início:</span>
+                        <span>${startDate.toLocaleDateString('pt-BR')}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Fim:</span>
+                        <span class="${projectIsOverdue ? 'text-red-400' : ''}">${endDate.toLocaleDateString('pt-BR')}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Duração:</span>
+                        <span>${totalDays} dias</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Status:</span>
+                        <span class="font-semibold ${projectIsOverdue ? 'text-red-400' : 'text-green-400'}">${timeProgress.status}</span>
+                    </div>
+                </div>
+                
+                <div class="w-full bg-gray-700 rounded-full h-3 mt-3">
+                    <div class="bg-gradient-to-r from-purple-500 to-green-500 h-3 rounded-full transition-all duration-500 ${projectIsOverdue ? 'bg-gradient-to-r from-red-500 to-orange-500' : ''}" style="width: ${Math.min(timeProgress.percentage, 100)}%"></div>
+                </div>
+            `;
+        }
+
+        function updateProjectStatus(newStatus) {
+            if (!currentProjectId) return;
+
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            project.status = newStatus;
+            project.updatedAt = new Date().toISOString();
+
+            // If marking as completed, set received value to budget
+            if (newStatus === 'concluido' && project.budget && !project.receivedValue) {
+                project.receivedValue = project.budget;
+            }
+
+            saveProjects();
+            renderProjects();
+            updateStats();
+            
+            const statusInfo = getStatusInfo(newStatus);
+            showNotification('Status Atualizado', `Projeto "${project.name}" marcado como ${statusInfo.text}.`, 'success');
+            
+            // Update modal
+            showProjectDetails(currentProjectId);
+        }
+
+        function updateProjectPayment(action) {
+            if (!currentProjectId) return;
+
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            if (!project.budget || project.budget <= 0) {
+                showNotification('Orçamento Não Definido', 'Defina o orçamento do projeto antes de atualizar o pagamento.', 'warning');
+                return;
+            }
+
+            if (action === 'paid') {
+                project.receivedValue = project.budget;
+                showNotification('Pagamento Completo', 'Projeto marcado como pago integralmente.', 'success');
+            } else if (action === 'partial') {
+                const currentReceived = project.receivedValue || 0;
+                const remaining = project.budget - currentReceived;
+                
+                const partialAmount = prompt(`Valor atual recebido: ${formatCurrency(currentReceived)}\nValor restante: ${formatCurrency(remaining)}\n\nDigite o valor do pagamento parcial:`);
+                
+                if (partialAmount && !isNaN(partialAmount) && parseFloat(partialAmount) > 0) {
+                    const newReceived = currentReceived + parseFloat(partialAmount);
+                    project.receivedValue = Math.min(newReceived, project.budget);
+                    
+                    if (project.receivedValue >= project.budget) {
+                        showNotification('Pagamento Completo', 'Projeto pago integralmente!', 'success');
+                    } else {
+                        showNotification('Pagamento Parcial', `Adicionado ${formatCurrency(parseFloat(partialAmount))} ao projeto.`, 'success');
+                    }
+                } else {
+                    return;
+                }
+            }
+
+            project.updatedAt = new Date().toISOString();
+            saveProjects();
+            renderProjects();
+            updateStats();
+            
+            // Update modal
+            showProjectDetails(currentProjectId);
+        }
+
+        function showClientDetails(id) {
+            const client = clients.find(c => c.id === id);
+            if (!client) return;
+
+            currentClientId = id;
+            document.getElementById('clientDetailsTitle').textContent = `Detalhes - ${client.name}`;
+            
+            // Populate client info
+            const clientInfo = document.getElementById('clientDetailsInfo');
+            clientInfo.innerHTML = `
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Nome:</span>
+                        <span class="font-semibold">${client.name}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Telefone:</span>
+                        <span>${client.phone}</span>
+                    </div>
+                    ${client.email ? `
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Email:</span>
+                            <span>${client.email}</span>
+                        </div>
+                    ` : ''}
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Avaliação:</span>
+                        <span>${getStarDisplay(client.rating || 0)}</span>
+                    </div>
+                    <div class="pt-2 border-t border-gray-600">
+                        <span class="text-gray-400">Endereço:</span>
+                        <p class="mt-1 text-sm">${client.address}</p>
+                    </div>
+                    ${client.notes ? `
+                        <div class="pt-2 border-t border-gray-600">
+                            <span class="text-gray-400">Observações:</span>
+                            <p class="mt-1 text-sm">${client.notes}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            // Update payment values
+            const projectValue = client.projectValue || 0;
+            const paidValue = client.paidValue || 0;
+            const remainingValue = projectValue - paidValue;
+
+            document.getElementById('totalValue').textContent = formatCurrency(projectValue);
+            document.getElementById('paidValue').textContent = formatCurrency(paidValue);
+            document.getElementById('remainingValue').textContent = formatCurrency(remainingValue);
+
+            // Update payment status
+            const paymentStatus = getPaymentStatus(client);
+            document.getElementById('paymentStatus').innerHTML = `
+                <span class="px-3 py-1 ${paymentStatus.color} text-white rounded-full font-semibold">
+                    ${paymentStatus.text}
+                </span>
+            `;
+
+            // Update project timeline
+            updateProjectTimeline(client);
+
+            // Show modal
+            document.getElementById('clientDetailsModal').classList.remove('hidden');
+            document.getElementById('clientDetailsModal').classList.add('flex');
+
+            // Initialize charts after modal is visible
+            setTimeout(() => {
+                initializePaymentChart(client);
+                initializeProgressChart(client);
+            }, 100);
+        }
+
+        function hideClientDetailsModal() {
+            document.getElementById('clientDetailsModal').classList.add('hidden');
+            document.getElementById('clientDetailsModal').classList.remove('flex');
+            
+            // Destroy charts
+            if (paymentChart) {
+                paymentChart.destroy();
+                paymentChart = null;
+            }
+            if (progressChart) {
+                progressChart.destroy();
+                progressChart = null;
+            }
+            
+            currentClientId = null;
+        }
+
+        function initializePaymentChart(client) {
+            const ctx = document.getElementById('paymentChart').getContext('2d');
+            const projectValue = client.projectValue || 0;
+            const paidValue = client.paidValue || 0;
+            const remainingValue = Math.max(0, projectValue - paidValue);
+
+            if (paymentChart) {
+                paymentChart.destroy();
+            }
+
+            paymentChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pago', 'Restante'],
+                    datasets: [{
+                        data: [paidValue, remainingValue],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(107, 114, 128, 0.3)'
+                        ],
+                        borderColor: [
+                            'rgb(34, 197, 94)',
+                            'rgb(107, 114, 128)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        function initializeProgressChart(client) {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            
+            if (progressChart) {
+                progressChart.destroy();
+            }
+
+            const progressData = calculateProjectProgress(client);
+
+            progressChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Progresso do Projeto'],
+                    datasets: [{
+                        label: 'Progresso',
+                        data: [progressData.percentage],
+                        backgroundColor: progressData.percentage >= 100 ? 
+                            'rgba(34, 197, 94, 0.8)' : 
+                            progressData.percentage >= 50 ? 
+                                'rgba(245, 158, 11, 0.8)' : 
+                                'rgba(239, 68, 68, 0.8)',
+                        borderColor: progressData.percentage >= 100 ? 
+                            'rgb(34, 197, 94)' : 
+                            progressData.percentage >= 50 ? 
+                                'rgb(245, 158, 11)' : 
+                                'rgb(239, 68, 68)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function calculateProjectProgress(client) {
+            if (!client.projectStart || !client.projectEnd) {
+                return { percentage: 0, status: 'Datas não definidas' };
+            }
+
+            const startDate = new Date(client.projectStart);
+            const endDate = new Date(client.projectEnd);
+            const currentDate = new Date();
+
+            const totalDuration = endDate.getTime() - startDate.getTime();
+            const elapsedTime = currentDate.getTime() - startDate.getTime();
+
+            let percentage = Math.round((elapsedTime / totalDuration) * 100);
+            percentage = Math.max(0, Math.min(100, percentage));
+
+            let status = '';
+            if (currentDate < startDate) {
+                status = 'Não iniciado';
+                percentage = 0;
+            } else if (currentDate > endDate) {
+                status = 'Prazo vencido';
+                percentage = 100;
+            } else {
+                const daysRemaining = Math.ceil((endDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+                status = `${daysRemaining} dias restantes`;
+            }
+
+            return { percentage, status };
+        }
+
+        function updateProjectTimeline(client) {
+            const timeline = document.getElementById('projectTimeline');
+            const progressData = calculateProjectProgress(client);
+
+            if (!client.projectStart || !client.projectEnd) {
+                timeline.innerHTML = `
+                    <div class="text-center text-gray-400">
+                        <p>📅 Datas do projeto não definidas</p>
+                        <p class="text-xs mt-2">Configure as datas de início e fim do projeto para ver o progresso</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const startDate = new Date(client.projectStart);
+            const endDate = new Date(client.projectEnd);
+            const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+
+            timeline.innerHTML = `
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-400">Progresso:</span>
+                        <span class="font-semibold text-lg">${progressData.percentage}%</span>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-400">Início:</span>
+                            <span>${startDate.toLocaleDateString('pt-BR')}</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-400">Fim:</span>
+                            <span>${endDate.toLocaleDateString('pt-BR')}</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-400">Duração:</span>
+                            <span>${totalDays} dias</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-400">Status:</span>
+                            <span class="font-semibold">${progressData.status}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full bg-gray-700 rounded-full h-3">
+                        <div class="bg-gradient-to-r from-purple-500 to-green-500 h-3 rounded-full transition-all duration-500" style="width: ${progressData.percentage}%"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function quickPaymentUpdate(clientId, action) {
+            const client = clients.find(c => c.id === clientId);
+            if (!client) return;
+
+            if (!client.projectValue || client.projectValue <= 0) {
+                showNotification('Valor Não Definido', 'Defina o valor do projeto antes de atualizar o pagamento.', 'warning');
+                return;
+            }
+
+            if (action === 'paid') {
+                client.paidValue = client.projectValue;
+                showNotification('Pagamento Atualizado', `${client.name} marcado como pago integralmente.`, 'success');
+            } else if (action === 'pending') {
+                client.paidValue = 0;
+                showNotification('Pagamento Atualizado', `${client.name} marcado como pendente.`, 'info');
+            } else if (action === 'partial') {
+                showPartialPaymentModal(clientId);
+                return;
+            }
+
+            saveClients();
+            renderClients();
+            updateClientStats();
+        }
+
+        function updatePaymentStatus(action) {
+            if (!currentClientId) return;
+
+            const client = clients.find(c => c.id === currentClientId);
+            if (!client) return;
+
+            if (action === 'partial') {
+                document.getElementById('partialPaymentForm').classList.toggle('hidden');
+                return;
+            }
+
+            if (!client.projectValue || client.projectValue <= 0) {
+                showNotification('Valor Não Definido', 'Defina o valor do projeto antes de atualizar o pagamento.', 'warning');
+                return;
+            }
+
+            if (action === 'paid') {
+                client.paidValue = client.projectValue;
+                showNotification('Pagamento Completo', 'Cliente marcado como pago integralmente.', 'success');
+            } else if (action === 'pending') {
+                client.paidValue = 0;
+                showNotification('Pagamento Pendente', 'Cliente marcado como pendente.', 'info');
+            }
+
+            saveClients();
+            renderClients();
+            updateClientStats();
+            
+            // Update modal
+            showClientDetails(currentClientId);
+        }
+
+        function applyPartialPayment() {
+            if (!currentClientId) return;
+
+            const client = clients.find(c => c.id === currentClientId);
+            if (!client) return;
+
+            const partialAmount = parseFloat(document.getElementById('partialAmount').value);
+            
+            if (isNaN(partialAmount) || partialAmount <= 0) {
+                showNotification('Valor Inválido', 'Digite um valor válido para o pagamento parcial.', 'error');
+                return;
+            }
+
+            const currentPaid = client.paidValue || 0;
+            const newPaidValue = currentPaid + partialAmount;
+            
+            if (newPaidValue > client.projectValue) {
+                client.paidValue = client.projectValue;
+                showNotification('Pagamento Completo', 'Valor excedeu o total do projeto. Cliente marcado como pago integralmente.', 'success');
+            } else {
+                client.paidValue = newPaidValue;
+                showNotification('Pagamento Parcial', `Adicionado ${formatCurrency(partialAmount)} ao pagamento.`, 'success');
+            }
+
+            document.getElementById('partialAmount').value = '';
+            document.getElementById('partialPaymentForm').classList.add('hidden');
+
+            saveClients();
+            renderClients();
+            updateClientStats();
+            
+            // Update modal
+            showClientDetails(currentClientId);
+        }
+
+        // Partial Payment Modal Functions
+        let currentPartialPaymentClientId = null;
+
+        function showPartialPaymentModal(clientId) {
+            const client = clients.find(c => c.id === clientId);
+            if (!client) return;
+
+            currentPartialPaymentClientId = clientId;
+            
+            // Populate client info
+            document.getElementById('partialPaymentClientName').textContent = client.name;
+            document.getElementById('partialPaymentTotal').textContent = formatCurrency(client.projectValue || 0);
+            document.getElementById('partialPaymentPaid').textContent = formatCurrency(client.paidValue || 0);
+            
+            const remaining = (client.projectValue || 0) - (client.paidValue || 0);
+            document.getElementById('partialPaymentRemaining').textContent = formatCurrency(remaining);
+            
+            // Generate quick amount buttons
+            generateQuickAmountButtons(remaining);
+            
+            // Reset form
+            document.getElementById('partialPaymentAmount').value = '';
+            document.getElementById('partialPaymentNotes').value = '';
+            updatePaymentPreview();
+            
+            // Show modal
+            document.getElementById('partialPaymentModal').classList.remove('hidden');
+            document.getElementById('partialPaymentModal').classList.add('flex');
+            
+            // Focus on amount input
+            setTimeout(() => {
+                document.getElementById('partialPaymentAmount').focus();
+            }, 100);
+        }
+
+        function hidePartialPaymentModal() {
+            document.getElementById('partialPaymentModal').classList.add('hidden');
+            document.getElementById('partialPaymentModal').classList.remove('flex');
+            currentPartialPaymentClientId = null;
+        }
+
+        function generateQuickAmountButtons(remainingAmount) {
+            const buttonsContainer = document.getElementById('quickAmountButtons');
+            
+            if (remainingAmount <= 0) {
+                buttonsContainer.innerHTML = '<p class="col-span-3 text-center text-gray-400 text-xs">Projeto já pago integralmente</p>';
+                return;
+            }
+            
+            // Generate smart quick amounts
+            const amounts = [];
+            
+            // 25%, 50%, 100% of remaining
+            amounts.push(Math.round(remainingAmount * 0.25 * 100) / 100);
+            amounts.push(Math.round(remainingAmount * 0.5 * 100) / 100);
+            amounts.push(remainingAmount);
+            
+            // Remove duplicates and sort
+            const uniqueAmounts = [...new Set(amounts)].sort((a, b) => a - b);
+            
+            buttonsContainer.innerHTML = uniqueAmounts.map(amount => `
+                <button type="button" onclick="setQuickAmount(${amount})" class="bg-purple-600 hover:bg-purple-700 px-2 py-1 rounded text-xs font-semibold transition-colors">
+                    ${formatCurrency(amount)}
+                </button>
+            `).join('');
+        }
+
+        function setQuickAmount(amount) {
+            document.getElementById('partialPaymentAmount').value = amount.toFixed(2);
+            updatePaymentPreview();
+        }
+
+        function updatePaymentPreview() {
+            const client = clients.find(c => c.id === currentPartialPaymentClientId);
+            if (!client) return;
+            
+            const currentPaid = client.paidValue || 0;
+            const projectValue = client.projectValue || 0;
+            const paymentAmount = parseFloat(document.getElementById('partialPaymentAmount').value) || 0;
+            
+            const newPaidValue = Math.min(currentPaid + paymentAmount, projectValue);
+            const newRemainingValue = Math.max(0, projectValue - newPaidValue);
+            const progressPercentage = projectValue > 0 ? Math.round((newPaidValue / projectValue) * 100) : 0;
+            
+            document.getElementById('previewNewPaid').textContent = formatCurrency(newPaidValue);
+            document.getElementById('previewNewRemaining').textContent = formatCurrency(newRemainingValue);
+            document.getElementById('previewProgress').textContent = `${progressPercentage}%`;
+            document.getElementById('previewProgressBar').style.width = `${progressPercentage}%`;
+            
+            // Update progress bar color based on percentage
+            const progressBar = document.getElementById('previewProgressBar');
+            if (progressPercentage >= 100) {
+                progressBar.className = 'bg-green-500 h-2 rounded-full transition-all duration-300';
+            } else if (progressPercentage >= 75) {
+                progressBar.className = 'bg-gradient-to-r from-yellow-500 to-green-500 h-2 rounded-full transition-all duration-300';
+            } else if (progressPercentage >= 50) {
+                progressBar.className = 'bg-gradient-to-r from-orange-500 to-yellow-500 h-2 rounded-full transition-all duration-300';
+            } else {
+                progressBar.className = 'bg-gradient-to-r from-purple-500 to-green-500 h-2 rounded-full transition-all duration-300';
+            }
+        }
+
+        function processPartialPayment() {
+            const client = clients.find(c => c.id === currentPartialPaymentClientId);
+            if (!client) return;
+            
+            const paymentAmount = parseFloat(document.getElementById('partialPaymentAmount').value);
+            const notes = document.getElementById('partialPaymentNotes').value.trim();
+            
+            if (isNaN(paymentAmount) || paymentAmount <= 0) {
+                showNotification('Valor Inválido', 'Digite um valor válido para o pagamento.', 'error');
+                return;
+            }
+            
+            const currentPaid = client.paidValue || 0;
+            const projectValue = client.projectValue || 0;
+            const newPaidValue = Math.min(currentPaid + paymentAmount, projectValue);
+            
+            // Update client data
+            client.paidValue = newPaidValue;
+            
+            // Add payment to history (if we want to track payment history)
+            if (!client.paymentHistory) {
+                client.paymentHistory = [];
+            }
+            
+            client.paymentHistory.push({
+                id: generateId(),
+                amount: paymentAmount,
+                date: new Date().toISOString(),
+                notes: notes || 'Pagamento parcial',
+                previousTotal: currentPaid,
+                newTotal: newPaidValue
+            });
+            
+            client.updatedAt = new Date().toISOString();
+            
+            // Save and update UI
+            saveClients();
+            renderClients();
+            updateClientStats();
+            
+            // Show success message
+            const progressPercentage = Math.round((newPaidValue / projectValue) * 100);
+            let message = `Pagamento de ${formatCurrency(paymentAmount)} registrado para ${client.name}.`;
+            
+            if (newPaidValue >= projectValue) {
+                message += ' Projeto pago integralmente! 🎉';
+            } else {
+                message += ` Progresso: ${progressPercentage}%`;
+            }
+            
+            showNotification('Pagamento Registrado', message, 'success');
+            hidePartialPaymentModal();
+        }
+
         // Event Listeners
         document.getElementById('projectForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -2395,6 +3860,10 @@
             const phone = document.getElementById('clientPhone').value;
             const email = document.getElementById('clientEmail').value;
             const address = document.getElementById('clientAddress').value;
+            const projectValue = parseFloat(document.getElementById('clientProjectValue').value) || 0;
+            const paidValue = parseFloat(document.getElementById('clientPaidValue').value) || 0;
+            const projectStart = document.getElementById('clientProjectStart').value;
+            const projectEnd = document.getElementById('clientProjectEnd').value;
             const rating = parseInt(document.getElementById('clientRatingValue').value) || 0;
             const notes = document.getElementById('clientNotes').value;
 
@@ -2407,6 +3876,10 @@
                         phone,
                         email,
                         address,
+                        projectValue,
+                        paidValue,
+                        projectStart,
+                        projectEnd,
                         rating,
                         notes,
                         updatedAt: new Date().toISOString()
@@ -2420,6 +3893,10 @@
                     phone,
                     email,
                     address,
+                    projectValue,
+                    paidValue,
+                    projectStart,
+                    projectEnd,
                     rating,
                     notes,
                     createdAt: new Date().toISOString(),
@@ -2457,6 +3934,27 @@
             if (e.target === this) hideBackupModal();
         });
 
+        document.getElementById('clientDetailsModal').addEventListener('click', function(e) {
+            if (e.target === this) hideClientDetailsModal();
+        });
+
+        document.getElementById('partialPaymentModal').addEventListener('click', function(e) {
+            if (e.target === this) hidePartialPaymentModal();
+        });
+
+        document.getElementById('projectDetailsModal').addEventListener('click', function(e) {
+            if (e.target === this) hideProjectDetailsModal();
+        });
+
+        // Partial Payment Form
+        document.getElementById('partialPaymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            processPartialPayment();
+        });
+
+        // Update preview when amount changes
+        document.getElementById('partialPaymentAmount').addEventListener('input', updatePaymentPreview);
+
         // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
@@ -2464,6 +3962,9 @@
                 hideClientModal();
                 hideDeleteModal();
                 hideBackupModal();
+                hideClientDetailsModal();
+                hidePartialPaymentModal();
+                hideProjectDetailsModal();
             }
             if (e.ctrlKey && e.key === 'n') {
                 e.preventDefault();
@@ -2492,5 +3993,5 @@
         // Initialize clients page display
         document.getElementById('clientsPage').style.display = 'none';
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'971633dad2ccf1dd',t:'MTc1NTU3MDM0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9716b885f050f1d7',t:'MTc1NTU3NTc4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
