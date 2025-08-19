@@ -182,7 +182,7 @@
                         <p class="text-xs md:text-sm text-gray-400">Bem-vindo!</p>
                         <p class="font-semibold text-sm md:text-base" id="currentDate"></p>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                    <div class="flex flex-row gap-2 sm:gap-3">
                         <button onclick="togglePage()" class="bg-purple-600 px-3 py-2 md:px-4 md:py-2 rounded-lg font-semibold hover:bg-purple-700 transition-all duration-300 text-xs md:text-sm">
                             👥 <span class="hidden sm:inline">Ver </span>Clientes
                         </button>
@@ -374,7 +374,7 @@
                         <p class="text-xs md:text-sm text-gray-400">Bem-vindo!</p>
                         <p class="font-semibold text-sm md:text-base" id="currentDateClients"></p>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                    <div class="flex flex-row gap-2 sm:gap-3">
                         <button onclick="togglePage()" class="bg-blue-600 px-3 py-2 md:px-4 md:py-2 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 text-xs md:text-sm">
                             📊 <span class="hidden sm:inline">Ver </span>Projetos
                         </button>
@@ -550,22 +550,22 @@
                     
                     <div>
                         <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Status</label>
-                        <select id="projectStatus" class="w-full p-3 md:p-4 rounded-lg bg-gray-800 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
-                            <option value="planejamento" class="bg-gray-800 text-white">📋 Planejamento</option>
-                            <option value="andamento" class="bg-gray-800 text-white">⚡ Em Andamento</option>
-                            <option value="concluido" class="bg-gray-800 text-white">✅ Concluído</option>
-                            <option value="pausado" class="bg-gray-800 text-white">⏸️ Pausado</option>
-                            <option value="cancelado" class="bg-gray-800 text-white">❌ Cancelado</option>
+                        <select id="projectStatus" class="w-full p-3 md:p-4 rounded-lg border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base" style="background-color: #27282A;">
+                            <option value="planejamento" style="background-color: #27282A; color: white;">📋 Planejamento</option>
+                            <option value="andamento" style="background-color: #27282A; color: white;">⚡ Em Andamento</option>
+                            <option value="concluido" style="background-color: #27282A; color: white;">✅ Concluído</option>
+                            <option value="pausado" style="background-color: #27282A; color: white;">⏸️ Pausado</option>
+                            <option value="cancelado" style="background-color: #27282A; color: white;">❌ Cancelado</option>
                         </select>
                     </div>
                     
                     <div>
                         <label class="block text-xs md:text-sm font-medium mb-1 md:mb-2 text-gray-300">Prioridade</label>
-                        <select id="projectPriority" class="w-full p-3 md:p-4 rounded-lg bg-gray-800 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base">
-                            <option value="baixa" class="bg-gray-800 text-white">🟢 Baixa</option>
-                            <option value="media" class="bg-gray-800 text-white">🟡 Média</option>
-                            <option value="alta" class="bg-gray-800 text-white">🟠 Alta</option>
-                            <option value="critica" class="bg-gray-800 text-white">🔴 Crítica</option>
+                        <select id="projectPriority" class="w-full p-3 md:p-4 rounded-lg border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base" style="background-color: #27282A;">
+                            <option value="baixa" style="background-color: #27282A; color: white;">🟢 Baixa</option>
+                            <option value="media" style="background-color: #27282A; color: white;">🟡 Média</option>
+                            <option value="alta" style="background-color: #27282A; color: white;">🟠 Alta</option>
+                            <option value="critica" style="background-color: #27282A; color: white;">🔴 Crítica</option>
                         </select>
                     </div>
                     
@@ -3993,5 +3993,5 @@
         // Initialize clients page display
         document.getElementById('clientsPage').style.display = 'none';
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9716b885f050f1d7',t:'MTc1NTU3NTc4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'971a542310846280',t:'MTc1NTYxMzYxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
